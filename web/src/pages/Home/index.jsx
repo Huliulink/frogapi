@@ -96,7 +96,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className='w-full overflow-x-hidden'>
+    <div className='w-full h-screen overflow-hidden'>
       <NoticeModal
         visible={noticeVisible}
         onClose={() => setNoticeVisible(false)}
@@ -121,8 +121,8 @@ const Home = () => {
           </button>
 
           {/* Main Content */}
-          <section className='relative z-10 w-full min-h-screen'>
-            <div className='flex min-h-screen items-center'>
+          <section className='relative z-10 w-full h-full'>
+            <div className='flex h-full items-center'>
               <div className='container mx-auto px-4 py-16'>
                 <div className='text-center max-w-4xl mx-auto'>
                   {/* Logo */}

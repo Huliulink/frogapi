@@ -60,14 +60,15 @@ const PageLayout = () => {
     '/pricing',
   ];
 
-  const shouldHideFooter = cardProPages.includes(location.pathname);
+  const isFullScreenPage = ['/', '/login', '/register', '/reset', '/user/reset'].includes(location.pathname);
+
+  const shouldHideFooter = isFullScreenPage || cardProPages.includes(location.pathname);
 
   const shouldInnerPadding =
     location.pathname.includes('/console') &&
     !location.pathname.startsWith('/console/chat') &&
     location.pathname !== '/console/playground';
 
-  const isHomePage = location.pathname === '/';
   const isConsoleRoute = location.pathname.startsWith('/console');
   const showSider = isConsoleRoute && (!isMobile || drawerOpen);
 

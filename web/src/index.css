@@ -941,6 +941,17 @@ html.dark .home-bg-image {
   background-image: url('/img/beijing-shengse.png');
 }
 
+/* Auth pages frosted glass panel */
+.auth-glass-panel {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+html.dark .auth-glass-panel {
+  background: rgba(0, 0, 0, 0.3);
+}
+
 /* ==================== 自定义圆角样式 ==================== */
 .semi-radio,
 .semi-tagInput,
