@@ -860,6 +860,91 @@ html.dark .with-pastel-balls::before {
 }
 
 /* ==================== 自定义圆角样式 ==================== */
+/* ==================== 首页模板样式 ==================== */
+@font-face {
+  font-family: 'BitcountGridDouble';
+  src: url('https://ext.same-assets.com/2360279046/1487473765.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+.font-frog-api {
+  font-family: 'BitcountGridDouble', monospace;
+}
+
+@keyframes home-fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.home-animate-fade-in-up {
+  animation: home-fade-in-up 0.6s ease-out forwards;
+}
+
+.home-delay-100 { animation-delay: 0.1s; }
+.home-delay-200 { animation-delay: 0.2s; }
+
+.home-card {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(228, 228, 231, 0.8);
+  backdrop-filter: blur(12px);
+  transition: all 0.3s;
+}
+
+.home-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  border-color: rgba(251, 146, 60, 0.4);
+  background: rgba(255, 247, 237, 0.6);
+}
+
+html.dark .home-card {
+  background: rgba(39, 39, 42, 0.9);
+  border-color: rgba(63, 63, 70, 0.5);
+}
+
+html.dark .home-card:hover {
+  background: rgba(67, 20, 7, 0.3);
+}
+
+.home-icon-box {
+  background-color: #ffedd5;
+}
+
+html.dark .home-icon-box {
+  background-color: rgba(124, 45, 18, 0.3);
+}
+
+.home-icon-color {
+  color: #ea580c;
+}
+
+html.dark .home-icon-color {
+  color: #fb923c;
+}
+
+.home-bg-gradient {
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 40%, rgba(176, 196, 222, 0.6) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 60% at 80% 20%, rgba(255, 182, 193, 0.5) 0%, transparent 50%),
+    radial-gradient(ellipse 70% 50% at 50% 80%, rgba(255, 218, 185, 0.6) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 40% at 10% 70%, rgba(234, 194, 211, 0.5) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 50% at 90% 60%, rgba(250, 219, 198, 0.6) 0%, transparent 50%),
+    linear-gradient(180deg, rgba(239, 235, 242, 1) 0%, rgba(255, 255, 255, 1) 100%);
+}
+
+html.dark .home-bg-gradient {
+  opacity: 0.3;
+}
+
+/* ==================== 自定义圆角样式 ==================== */
 .semi-radio,
 .semi-tagInput,
 .semi-input-textarea-wrapper,
