@@ -130,7 +130,7 @@ const PageLayout = () => {
         overflow: isMobile ? 'visible' : 'hidden',
       }}
     >
-      {!isHomePage && (
+      {!isFullScreenPage && (
         <Header
           style={{
             padding: 0,
