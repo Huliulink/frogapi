@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { Check, DollarSign, BarChart3, Sparkles, Layers, Zap } from 'lucide-react';
+import { Check, DollarSign, BarChart3, Sparkles, Layers, Zap, Sun, Moon } from 'lucide-react';
 import { API, showError } from '../../helpers';
 import { marked } from 'marked';
 import NoticeModal from '../../components/layout/NoticeModal';
 import { StatusContext } from '../../context/Status';
 import { useIsMobile } from '../../hooks/common/useIsMobile';
+import { useActualTheme, useSetTheme } from '../../context/Theme';
 
 const features = [
   {
@@ -46,6 +47,12 @@ const Home = () => {
   const [homePageContentLoaded, setHomePageContentLoaded] = useState(false);
   const [homePageContent, setHomePageContent] = useState('');
   const [noticeVisible, setNoticeVisible] = useState(false);
+  const actualTheme = useActualTheme();
+  const setTheme = useSetTheme();
+
+  const toggleTheme = () => {
+    setTheme(actualTheme === 'dark' ? 'light' : 'dark');
+  };
 
   const displayHomePageContent = async () => {
     setHomePageContent(localStorage.getItem('home_page_content') || '');
@@ -97,19 +104,21 @@ const Home = () => {
       />
       {homePageContentLoaded && homePageContent === '' ? (
         <div className='relative min-h-screen'>
-          {/* Background */}
-          <div className='fixed inset-0'>
-            <div className='absolute inset-0 h-full w-full overflow-hidden pointer-events-none select-none'>
-              <div className='absolute inset-0 home-bg-gradient' />
-              <div
-                className='absolute inset-0 h-full w-full pointer-events-none'
-                style={{
-                  background:
-                    'linear-gradient(to bottom, transparent, var(--semi-color-bg-0))',
-                }}
-              />
-            </div>
-          </div>
+          {/* Background Image */}
+          <div className='fixed inset-0 home-bg-image' />
+
+          {/* Theme Toggle - Top Left */}
+          <button
+            type='button'
+            onClick={toggleTheme}
+            className='fixed top-4 left-4 z-20 flex items-center justify-center w-10 h-10 rounded-full transition-colors duration-200'
+            style={{
+              backgroundColor: 'var(--semi-color-fill-0)',
+              color: 'var(--semi-color-text-0)',
+            }}
+          >
+            {actualTheme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
 
           {/* Main Content */}
           <section className='relative z-10 w-full min-h-screen'>
