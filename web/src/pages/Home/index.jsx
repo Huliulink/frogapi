@@ -103,15 +103,15 @@ const Home = () => {
         isMobile={isMobile}
       />
       {homePageContentLoaded && homePageContent === '' ? (
-        <div className='relative min-h-screen'>
+        <div className='relative h-screen overflow-hidden'>
           {/* Background Image */}
-          <div className='fixed inset-0 home-bg-image' />
+          <div className='absolute inset-0 home-bg-image' />
 
-          {/* Theme Toggle - Top Left */}
+          {/* Theme Toggle - Top Right */}
           <button
             type='button'
             onClick={toggleTheme}
-            className='fixed top-4 left-4 z-20 flex items-center justify-center w-10 h-10 rounded-full transition-colors duration-200'
+            className='absolute top-4 right-4 z-20 flex items-center justify-center w-10 h-10 rounded-full transition-colors duration-200'
             style={{
               backgroundColor: 'var(--semi-color-fill-0)',
               color: 'var(--semi-color-text-0)',
