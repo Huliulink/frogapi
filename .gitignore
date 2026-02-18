@@ -31,3 +31,4 @@ bin/参考模板/主页/app/globals.css
 bin/参考模板/主页/app/layout.tsx
 bin/参考模板/主页/app/page.tsx
 bin/参考模板/主页/lib/utils.ts
+.claude/settings.local.json
