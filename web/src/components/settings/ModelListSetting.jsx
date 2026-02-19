@@ -318,7 +318,7 @@ const ModelListSetting = () => {
         loading={loading}
         pagination={false}
         size='small'
-        empty={t('暂无端点数据，请点击"同步模型列表"按钮')}
+        empty={t('暂无端点数据，请点击同步按钮')}
       />
 
       {selectedEndpoint && (
