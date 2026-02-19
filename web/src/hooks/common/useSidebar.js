@@ -33,6 +33,7 @@ export const DEFAULT_ADMIN_CONFIG = {
   },
   console: {
     enabled: true,
+    consoleHome: true,
     detail: true,
     token: true,
     modelList: true,

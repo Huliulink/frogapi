@@ -76,13 +76,14 @@ import {
   Server,
   CalendarClock,
   LayoutList,
+  Home,
 } from 'lucide-react';
 
 // 获取侧边栏Lucide图标组件
 export function getLucideIcon(key, selected = false) {
   const size = 16;
   const strokeWidth = 2;
-  const SELECTED_COLOR = 'var(--semi-color-primary)';
+  const SELECTED_COLOR = '#fff';
   const iconColor = selected ? SELECTED_COLOR : 'currentColor';
   const commonProps = {
     size,
@@ -92,6 +93,8 @@ export function getLucideIcon(key, selected = false) {
 
   // 根据不同的key返回不同的图标
   switch (key) {
+    case 'consoleHome':
+      return <Home {...commonProps} color={iconColor} />;
     case 'detail':
       return <LayoutDashboard {...commonProps} color={iconColor} />;
     case 'playground':

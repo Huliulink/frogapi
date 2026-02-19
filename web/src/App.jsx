@@ -44,6 +44,7 @@ import Task from './pages/Task';
 import ModelPage from './pages/Model';
 import ModelDeploymentPage from './pages/ModelDeployment';
 import ModelList from './pages/ModelList';
+import ConsoleHome from './pages/ConsoleHome';
 import Playground from './pages/Playground';
 import Subscription from './pages/Subscription';
 import OAuth2Callback from './components/auth/OAuth2Callback';
@@ -103,6 +104,14 @@ function App() {
           }
         />
         <Route path='/forbidden' element={<Forbidden />} />
+        <Route
+          path='/console/home'
+          element={
+            <PrivateRoute>
+              <ConsoleHome />
+            </PrivateRoute>
+          }
+        />
         <Route
           path='/console/models'
           element={

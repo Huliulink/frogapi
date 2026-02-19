@@ -32,6 +32,7 @@ import { Nav, Button } from '@douyinfe/semi-ui';
 
 const routerMap = {
   home: '/',
+  consoleHome: '/console/home',
   channel: '/console/channel',
   token: '/console/token',
   redemption: '/console/redemption',
@@ -445,6 +446,8 @@ const SiderBar = ({ onNavigate = () => {} }) => {
             setOpenedKeys(data.openKeys);
           }}
         >
+          {isModuleVisible('console', 'consoleHome') &&
+            renderNavItem({ text: t('主页'), itemKey: 'consoleHome', to: '/console/home' })}
           {hasSectionVisibleModules('chat') &&
             chatMenuItems.map((item) => renderSubItem(item))}
           {hasSectionVisibleModules('console') &&
