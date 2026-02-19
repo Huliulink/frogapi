@@ -68,6 +68,17 @@ code {
   padding: 8px 12px !important;
 }
 
+.semi-navigation-item-selected,
+.semi-navigation-item-normal:hover.semi-navigation-item-selected,
+.semi-navigation-item-normal:active.semi-navigation-item-selected {
+  background-color: rgb(198, 97, 63) !important;
+  color: #fff !important;
+}
+
+.semi-navigation-item-selected .semi-navigation-item-icon:first-child {
+  color: #fff !important;
+}
+
 .semi-navigation-sub-title {
   padding: 0 !important;
 }
