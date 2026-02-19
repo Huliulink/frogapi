@@ -28,7 +28,7 @@ import { useMinimumLoadingTime } from '../../hooks/common/useMinimumLoadingTime'
 import { isAdmin, isRoot, showError } from '../../helpers';
 import SkeletonWrapper from './components/SkeletonWrapper';
 
-import { Nav, Divider, Button } from '@douyinfe/semi-ui';
+import { Nav, Button } from '@douyinfe/semi-ui';
 
 const routerMap = {
   home: '/',
@@ -445,54 +445,15 @@ const SiderBar = ({ onNavigate = () => {} }) => {
             setOpenedKeys(data.openKeys);
           }}
         >
-          {/* 聊天区域 */}
-          {hasSectionVisibleModules('chat') && (
-            <div className='sidebar-section'>
-              {!collapsed && (
-                <div className='sidebar-group-label'>{t('聊天')}</div>
-              )}
-              {chatMenuItems.map((item) => renderSubItem(item))}
-            </div>
-          )}
-
-          {/* 控制台区域 */}
-          {hasSectionVisibleModules('console') && (
-            <>
-              <Divider className='sidebar-divider' />
-              <div>
-                {!collapsed && (
-                  <div className='sidebar-group-label'>{t('控制台')}</div>
-                )}
-                {workspaceItems.map((item) => renderNavItem(item))}
-              </div>
-            </>
-          )}
-
-          {/* 个人中心区域 */}
-          {hasSectionVisibleModules('personal') && (
-            <>
-              <Divider className='sidebar-divider' />
-              <div>
-                {!collapsed && (
-                  <div className='sidebar-group-label'>{t('个人中心')}</div>
-                )}
-                {financeItems.map((item) => renderNavItem(item))}
-              </div>
-            </>
-          )}
-
-          {/* 管理员区域 - 只在管理员时显示且配置允许时显示 */}
-          {isAdmin() && hasSectionVisibleModules('admin') && (
-            <>
-              <Divider className='sidebar-divider' />
-              <div>
-                {!collapsed && (
-                  <div className='sidebar-group-label'>{t('管理员')}</div>
-                )}
-                {adminItems.map((item) => renderNavItem(item))}
-              </div>
-            </>
-          )}
+          {hasSectionVisibleModules('chat') &&
+            chatMenuItems.map((item) => renderSubItem(item))}
+          {hasSectionVisibleModules('console') &&
+            workspaceItems.map((item) => renderNavItem(item))}
+          {hasSectionVisibleModules('personal') &&
+            financeItems.map((item) => renderNavItem(item))}
+          {isAdmin() &&
+            hasSectionVisibleModules('admin') &&
+            adminItems.map((item) => renderNavItem(item))}
         </Nav>
       </SkeletonWrapper>
 

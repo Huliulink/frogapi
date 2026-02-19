@@ -156,10 +156,9 @@ const Home = () => {
                         type='button'
                         className='inline-flex items-center justify-center min-w-24 h-12 px-8 text-medium gap-3 rounded-xl font-medium transition-all duration-200 hover:opacity-90 hover:scale-[0.98] active:scale-[0.97]'
                         style={{
-                          backgroundImage:
-                            '#c6613f',
+                          backgroundColor: '#c6613f',
                           color: '#fff',
-                          boxShadow: '0 10px 15px -3px rgba(249, 115, 22, 0.25)',
+                          boxShadow: '0 10px 15px -3px rgba(198, 97, 63, 0.25)',
                         }}
                       >
                         立即开始

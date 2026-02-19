@@ -85,7 +85,7 @@ const ModelListPage = () => {
           <div className='flex items-center gap-4' style={{ color: 'var(--semi-color-text-2)' }}>
             <span className='flex items-center gap-1 text-sm'>
               <Server size={14} />
-              {endpoints.length} {t('个端点')}
+              {endpoints.length} {t('个分组')}
             </span>
             <span className='flex items-center gap-1 text-sm'>
               <LayoutList size={14} />
@@ -95,7 +95,7 @@ const ModelListPage = () => {
         </div>
         <Input
           prefix={<Search size={14} />}
-          placeholder={t('搜索端点 / 模型...')}
+          placeholder={t('搜索分组 / 模型...')}
           value={searchText}
           onChange={setSearchText}
           showClear

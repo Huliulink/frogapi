@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Tag, Divider } from '@douyinfe/semi-ui';
-import { Server } from 'lucide-react';
+import { Layers } from 'lucide-react';
 
 const EndpointSidebar = ({ endpoints, selectedId, onSelect }) => {
   const { t } = useTranslation();
@@ -9,9 +9,9 @@ const EndpointSidebar = ({ endpoints, selectedId, onSelect }) => {
   return (
     <div>
       <div className='flex items-center gap-2 px-4 py-3' style={{ borderBottom: '1px solid var(--semi-color-border)' }}>
-        <Server size={16} style={{ color: 'var(--semi-color-text-2)' }} />
+        <Layers size={16} style={{ color: 'var(--semi-color-text-2)' }} />
         <span className='text-sm font-semibold' style={{ color: 'var(--semi-color-text-0)' }}>
-          {t('可用端点')}
+          {t('可用分组')}
         </span>
       </div>
       <div className='overflow-y-auto' style={{ maxHeight: 'calc(100vh - 260px)' }}>

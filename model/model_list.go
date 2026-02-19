@@ -26,6 +26,7 @@ type ModelListItem struct {
 	Id                  int     `json:"id" gorm:"primaryKey;autoIncrement"`
 	EndpointId          int     `json:"endpoint_id" gorm:"index;not null"`
 	ModelName           string  `json:"model_name" gorm:"type:varchar(200);not null"`
+	Icon                string  `json:"icon" gorm:"type:varchar(500)"`
 	OfficialInputPrice  float64 `json:"official_input_price" gorm:"default:0"`
 	OfficialOutputPrice float64 `json:"official_output_price" gorm:"default:0"`
 	SiteInputPrice      float64 `json:"site_input_price" gorm:"default:0"`
@@ -225,6 +226,7 @@ func syncModelsForEndpoint(endpointId int, models []Pricing) int {
 		item := &ModelListItem{
 			EndpointId:      endpointId,
 			ModelName:       modelName,
+			Icon:            p.Icon,
 			SiteInputPrice:  siteInputPrice,
 			SiteOutputPrice: siteOutputPrice,
 			Status:          1,

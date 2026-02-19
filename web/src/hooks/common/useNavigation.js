@@ -23,11 +23,11 @@ export const useNavigation = (t, docsLink, headerNavModules) => {
   const mainNavLinks = useMemo(() => {
     // 默认配置，如果没有传入配置则显示所有模块
     const defaultModules = {
-      home: true,
-      console: true,
-      pricing: true,
-      docs: true,
-      about: true,
+      home: false,
+      console: false,
+      pricing: false,
+      docs: false,
+      about: false,
     };
 
     // 使用传入的配置或默认配置

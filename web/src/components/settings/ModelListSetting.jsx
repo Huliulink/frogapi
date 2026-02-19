@@ -70,7 +70,7 @@ const ModelListSetting = () => {
       const res = await API.post('/api/model-list/admin/sync');
       if (res.data.success) {
         const data = res.data.data;
-        showSuccess(t('同步成功') + `: ${data.endpoint_count} ${t('个端点')}, ${data.model_count} ${t('个模型')}`);
+        showSuccess(t('同步成功') + `: ${data.endpoint_count} ${t('个分组')}, ${data.model_count} ${t('个模型')}`);
         loadEndpoints();
         if (selectedEndpoint) {
           loadModels(selectedEndpoint.id);
@@ -306,7 +306,7 @@ const ModelListSetting = () => {
               setEndpointModalVisible(true);
             }}
           >
-            {t('添加端点')}
+            {t('添加分组')}
           </Button>
         </Space>
       </div>
@@ -318,7 +318,7 @@ const ModelListSetting = () => {
         loading={loading}
         pagination={false}
         size='small'
-        empty={t('暂无端点数据，请点击同步按钮')}
+        empty={t('暂无分组数据，请点击同步按钮')}
       />
 
       {selectedEndpoint && (
@@ -349,9 +349,9 @@ const ModelListSetting = () => {
         </div>
       )}
 
-      {/* 端点编辑弹窗 */}
+      {/* 分组编辑弹窗 */}
       <Modal
-        title={editingEndpoint?.id ? t('编辑端点') : t('添加端点')}
+        title={editingEndpoint?.id ? t('编辑分组') : t('添加分组')}
         visible={endpointModalVisible}
         onCancel={() => {
           setEndpointModalVisible(false);
@@ -363,8 +363,8 @@ const ModelListSetting = () => {
           initValues={editingEndpoint || { status: true, ratio: 1, sort_order: 0 }}
           onSubmit={handleSaveEndpoint}
         >
-          <Form.Input field='name' label={t('端点名称')} rules={[{ required: true }]} />
-          <Form.Input field='url' label={t('端点URL')} />
+          <Form.Input field='name' label={t('分组名称')} rules={[{ required: true }]} />
+          <Form.Input field='url' label={t('分组URL')} />
           <Form.InputNumber field='ratio' label={t('计费倍率')} min={0} step={0.1} />
           <Form.Input field='icon' label={t('图标')} placeholder='e.g. OpenAI.Color' />
           <Form.InputNumber field='sort_order' label={t('排序')} min={0} />
@@ -390,6 +390,7 @@ const ModelListSetting = () => {
           onSubmit={handleSaveModel}
         >
           <Form.Input field='model_name' label={t('模型名称')} rules={[{ required: true }]} />
+          <Form.Input field='icon' label={t('图标')} placeholder='e.g. OpenAI.Color' />
           <Form.InputNumber field='official_input_price' label={t('官方输入价格') + ' ($/1M tokens)'} min={0} step={0.01} />
           <Form.InputNumber field='official_output_price' label={t('官方输出价格') + ' ($/1M tokens)'} min={0} step={0.01} />
           <Form.InputNumber field='site_input_price' label={t('本站输入价格') + ' ($/1M tokens)'} min={0} step={0.01} />

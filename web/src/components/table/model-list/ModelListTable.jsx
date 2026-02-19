@@ -1,7 +1,8 @@
 import React from 'react';
-import { Table, Tag, RadioGroup, Radio, Banner } from '@douyinfe/semi-ui';
+import { Table, Tag, RadioGroup, Radio, Banner, Toast } from '@douyinfe/semi-ui';
 import { useTranslation } from 'react-i18next';
-import { Server } from 'lucide-react';
+import { Layers, Copy } from 'lucide-react';
+import { getLobeHubIcon } from '../../../helpers/render';
 
 const ModelListTable = ({
   endpoint,
@@ -21,6 +22,12 @@ const ModelListTable = ({
     return `${symbol}${converted.toFixed(2)}/M`;
   };
 
+  const handleCopy = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+      Toast.success(t('已复制'));
+    });
+  };
+
   const inputKey = priceType === 'official' ? 'official_input_price' : 'site_input_price';
   const outputKey = priceType === 'official' ? 'official_output_price' : 'site_output_price';
 
@@ -29,7 +36,25 @@ const ModelListTable = ({
       title: t('模型'),
       dataIndex: 'model_name',
       key: 'model_name',
-      render: (text) => <span className='font-medium text-sm'>{text}</span>,
+      render: (text, record) => (
+        <div className='flex items-center gap-2'>
+          <span className='flex-shrink-0'>
+            {record.icon ? getLobeHubIcon(record.icon, 20) : getLobeHubIcon('Layers', 20)}
+          </span>
+          <span className='font-medium text-sm truncate'>{text}</span>
+          <button
+            className='flex-shrink-0 p-0.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer'
+            style={{ border: 'none', background: 'none', color: 'var(--semi-color-text-2)' }}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleCopy(text);
+            }}
+            title={t('复制模型名称')}
+          >
+            <Copy size={14} />
+          </button>
+        </div>
+      ),
     },
     {
       title: t('输入价格'),
@@ -68,7 +93,7 @@ const ModelListTable = ({
   if (!endpoint) {
     return (
       <div className='flex items-center justify-center' style={{ height: 300, color: 'var(--semi-color-text-2)' }}>
-        {t('请选择一个端点')}
+        {t('请选择一个分组')}
       </div>
     );
   }
@@ -81,7 +106,7 @@ const ModelListTable = ({
         style={{ borderBottom: '1px solid var(--semi-color-border)' }}
       >
         <div className='flex items-center gap-2'>
-          <Server size={16} style={{ color: 'var(--semi-color-primary)' }} />
+          <Layers size={16} style={{ color: 'var(--semi-color-primary)' }} />
           <span className='text-sm font-semibold' style={{ color: 'var(--semi-color-text-0)' }}>
             {endpoint.name}
           </span>
