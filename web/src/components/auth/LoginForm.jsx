@@ -66,6 +66,7 @@ import TwoFAVerification from './TwoFAVerification';
 import { useTranslation } from 'react-i18next';
 import { SiDiscord } from 'react-icons/si';
 import AuthLayout from './AuthLayout';
+import AuthInput from './AuthInput';
 
 const LoginForm = () => {
   let navigate = useNavigate();
@@ -493,10 +494,10 @@ const LoginForm = () => {
     return (
       <Card className='border-0 !rounded-2xl overflow-hidden'>
             <div className='flex flex-col items-center pt-6 pb-2'>
-              <Title heading={3} className='text-gray-800 dark:text-gray-200'>
+              <Title heading={2} className='auth-title text-gray-800 dark:text-gray-200'>
                 {t('登录')}
               </Title>
-              <Text className='text-gray-400 mt-1' size='small'>
+              <Text className='auth-subtitle mt-2'>
                 {t('选择您喜欢的方式登录')}
               </Text>
             </div>
@@ -701,10 +702,10 @@ const LoginForm = () => {
     return (
       <Card className='border-0 !rounded-2xl overflow-hidden'>
             <div className='flex flex-col items-center pt-6 pb-2'>
-              <Title heading={3} className='text-gray-800 dark:text-gray-200'>
+              <Title heading={2} className='auth-title text-gray-800 dark:text-gray-200'>
                 {t('登录')}
               </Title>
-              <Text className='text-gray-400 mt-1' size='small'>
+              <Text className='auth-subtitle mt-2'>
                 {t('使用账号和密码登录您的账户')}
               </Text>
             </div>
@@ -722,20 +723,18 @@ const LoginForm = () => {
                 </Button>
               )}
               <Form className='space-y-3'>
-                <Form.Input
-                  field='username'
+                <AuthInput
                   label={t('账号')}
-                  placeholder={t('用户名或邮箱')}
                   name='username'
+                  value={username}
                   onChange={(value) => handleChange('username', value)}
                 />
 
-                <Form.Input
-                  field='password'
+                <AuthInput
+                  type='password'
                   label={t('密码')}
-                  placeholder={t('请输入密码')}
                   name='password'
-                  mode='password'
+                  value={password}
                   onChange={(value) => handleChange('password', value)}
                 />
 

@@ -28,10 +28,11 @@ import {
 } from '../../helpers';
 import Turnstile from 'react-turnstile';
 import { Button, Card, Form, Typography } from '@douyinfe/semi-ui';
-import { IconMail } from '@douyinfe/semi-icons';
+
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import AuthLayout from './AuthLayout';
+import AuthInput from './AuthInput';
 
 const { Text, Title } = Typography;
 
@@ -108,19 +109,18 @@ const PasswordResetForm = () => {
     <AuthLayout>
       <Card className='border-0 !rounded-2xl overflow-hidden'>
               <div className='flex flex-col items-center pt-6 pb-2'>
-                <Title heading={3} className='text-gray-800 dark:text-gray-200'>
-                  {t('密码重置')}
+                <Title heading={2} className='auth-title text-gray-800 dark:text-gray-200'>
+                  {t('重置密码')}
                 </Title>
-                <Text className='text-gray-400 mt-1' size='small'>
-                  {t('输入邮箱地址以重置密码')}
+                <Text className='auth-subtitle mt-2'>
+                  {t('通过邮箱验证码重置你的账户密码')}
                 </Text>
               </div>
               <div className='px-2 py-8'>
                 <Form className='space-y-3'>
-                  <Form.Input
-                    field='email'
+                  <AuthInput
+                    type='email'
                     label={t('邮箱')}
-                    placeholder={t('请输入您的邮箱地址')}
                     name='email'
                     value={email}
                     onChange={handleChange}

@@ -952,6 +952,122 @@ html.dark .auth-glass-panel {
   background: rgba(0, 0, 0, 0.3);
 }
 
+/* Auth floating label input */
+.auth-input-group {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 1em 0;
+  position: relative;
+}
+
+.auth-input-group input {
+  font-size: 100%;
+  padding: 0.8em;
+  outline: none;
+  border: 2px solid rgb(200, 200, 200);
+  background-color: transparent;
+  border-radius: 20px;
+  width: 100%;
+  color: var(--semi-color-text-0);
+}
+
+.auth-input-group input.has-prefix {
+  padding-left: 3.2em;
+}
+
+.auth-input-group input.has-suffix {
+  padding-right: 3em;
+}
+
+.auth-input-group label {
+  font-size: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 0.8em;
+  margin-left: 0.5em;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  color: rgb(100, 100, 100);
+}
+
+.auth-input-group label.has-prefix {
+  margin-left: 2.7em;
+}
+
+.auth-input-group :is(input:focus, input:not(:placeholder-shown)) ~ label {
+  transform: translateY(-50%) scale(0.9);
+  margin: 0;
+  margin-left: 1.3em;
+  padding: 0.4em;
+  background-color: var(--semi-color-bg-1);
+  border-radius: 4px;
+}
+
+.auth-input-group :is(input:focus, input:not(:placeholder-shown)) ~ label.has-prefix {
+  margin-left: 1.3em;
+}
+
+.auth-input-group :is(input:focus, input:not(:placeholder-shown)) {
+  border-color: rgb(150, 150, 200);
+}
+
+.auth-input-group .auth-input-prefix {
+  position: absolute;
+  left: 1em;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--semi-color-text-2);
+  font-size: 0.95em;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.auth-input-group .auth-input-suffix {
+  position: absolute;
+  right: 0.5em;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.auth-input-group .auth-input-eye {
+  position: absolute;
+  right: 0.8em;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--semi-color-text-2);
+  padding: 0.2em;
+  display: flex;
+  align-items: center;
+  z-index: 1;
+}
+
+html.dark .auth-input-group input {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+html.dark .auth-input-group :is(input:focus, input:not(:placeholder-shown)) {
+  border-color: rgba(150, 150, 200, 0.6);
+}
+
+html.dark .auth-input-group label {
+  color: rgb(160, 160, 160);
+}
+
+/* Auth title/subtitle larger fonts */
+.auth-title {
+  font-size: 1.75rem !important;
+  font-weight: 700 !important;
+}
+
+.auth-subtitle {
+  font-size: 0.95rem !important;
+  color: var(--semi-color-text-2);
+}
+
 /* ==================== 自定义圆角样式 ==================== */
 .semi-radio,
 .semi-tagInput,

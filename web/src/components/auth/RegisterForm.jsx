@@ -45,9 +45,6 @@ import Text from '@douyinfe/semi-ui/lib/es/typography/text';
 import {
   IconGithubLogo,
   IconMail,
-  IconUser,
-  IconLock,
-  IconKey,
 } from '@douyinfe/semi-icons';
 import {
   onGitHubOAuthClicked,
@@ -63,6 +60,7 @@ import { StatusContext } from '../../context/Status';
 import { useTranslation } from 'react-i18next';
 import { SiDiscord } from 'react-icons/si';
 import AuthLayout from './AuthLayout';
+import AuthInput from './AuthInput';
 
 const RegisterForm = () => {
   let navigate = useNavigate();
@@ -377,11 +375,11 @@ const RegisterForm = () => {
     return (
       <Card className='border-0 !rounded-2xl overflow-hidden'>
             <div className='flex flex-col items-center pt-6 pb-2'>
-              <Title heading={3} className='text-gray-800 dark:text-gray-200'>
+              <Title heading={2} className='auth-title text-gray-800 dark:text-gray-200'>
                 {t('注册')}
               </Title>
-              <Text className='text-gray-400 mt-1' size='small'>
-                {t('选择您喜欢的方式注册')}
+              <Text className='auth-subtitle mt-2'>
+                {t('创建你的账户以开始使用')}
               </Text>
             </div>
             <div className='px-2 py-8'>
@@ -515,62 +513,57 @@ const RegisterForm = () => {
     return (
       <Card className='border-0 !rounded-2xl overflow-hidden'>
             <div className='flex flex-col items-center pt-6 pb-2'>
-              <Title heading={3} className='text-gray-800 dark:text-gray-200'>
+              <Title heading={2} className='auth-title text-gray-800 dark:text-gray-200'>
                 {t('注册')}
               </Title>
-              <Text className='text-gray-400 mt-1' size='small'>
-                {t('创建一个新账号')}
+              <Text className='auth-subtitle mt-2'>
+                {t('创建你的账户以开始使用')}
               </Text>
             </div>
             <div className='px-2 py-8'>
               <Form className='space-y-3'>
-                <Form.Input
-                  field='username'
+                <AuthInput
                   label={t('用户名')}
-                  placeholder={t('请输入用户名')}
                   name='username'
+                  value={inputs.username}
                   onChange={(value) => handleChange('username', value)}
                 />
 
-                <Form.Input
-                  field='password'
+                <AuthInput
+                  type='password'
                   label={t('密码')}
-                  placeholder={t('输入密码，最短 8 位，最长 20 位')}
                   name='password'
-                  mode='password'
+                  value={inputs.password}
                   onChange={(value) => handleChange('password', value)}
                 />
 
-                <Form.Input
-                  field='password2'
+                <AuthInput
+                  type='password'
                   label={t('确认密码')}
-                  placeholder={t('确认密码')}
                   name='password2'
-                  mode='password'
+                  value={inputs.password2}
                   onChange={(value) => handleChange('password2', value)}
                 />
 
-                <Form.Input
-                  field='phone'
+                <AuthInput
                   label={t('手机号')}
-                  placeholder={t('请输入11位手机号')}
                   name='phone'
+                  value={inputs.phone}
                   onChange={(value) => handleChange('phone', value)}
-                  addonBefore='+86'
+                  prefix='+86'
                 />
 
                 {showEmailVerification && (
                   <>
-                    <Form.Input
-                      field='email'
-                      label={t('邮箱')}
-                      placeholder={t('输入邮箱地址')}
-                      name='email'
+                    <AuthInput
                       type='email'
+                      label={t('邮箱')}
+                      name='email'
+                      value={inputs.email}
                       onChange={(value) => handleChange('email', value)}
-                      prefix={<IconMail />}
                       suffix={
                         <Button
+                          size='small'
                           onClick={sendVerificationCode}
                           loading={verificationCodeLoading}
                           disabled={disableButton || verificationCodeLoading}
@@ -582,15 +575,13 @@ const RegisterForm = () => {
                         </Button>
                       }
                     />
-                    <Form.Input
-                      field='verification_code'
+                    <AuthInput
                       label={t('验证码')}
-                      placeholder={t('输入验证码')}
                       name='verification_code'
+                      value={inputs.verification_code}
                       onChange={(value) =>
                         handleChange('verification_code', value)
                       }
-                      prefix={<IconKey />}
                     />
                   </>
                 )}
