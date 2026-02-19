@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"regexp"
 	"strconv"
 	"strings"
 	"sync"
@@ -167,12 +168,28 @@ func Register(c *gin.Context) {
 		common.ApiErrorI18n(c, i18n.MsgUserExists)
 		return
 	}
+	// 验证手机号（必填，+86格式，11位国内手机号）
+	phone := strings.TrimSpace(user.Phone)
+	if phone == "" {
+		common.ApiErrorI18n(c, i18n.MsgUserPhoneRequired)
+		return
+	}
+	phoneRegex := regexp.MustCompile(`^1[3-9]\d{9}$`)
+	if !phoneRegex.MatchString(phone) {
+		common.ApiErrorI18n(c, i18n.MsgUserPhoneInvalid)
+		return
+	}
+	if model.IsPhoneAlreadyTaken(phone) {
+		common.ApiErrorI18n(c, i18n.MsgUserPhoneExists)
+		return
+	}
 	affCode := user.AffCode // this code is the inviter's code, not the user's own code
 	inviterId, _ := model.GetUserIdByAffCode(affCode)
 	cleanUser := model.User{
 		Username:    user.Username,
 		Password:    user.Password,
 		DisplayName: user.Username,
+		Phone:       phone,
 		InviterId:   inviterId,
 		Role:        common.RoleCommonUser, // 明确设置角色为普通用户
 	}
@@ -390,6 +407,7 @@ func GetSelf(c *gin.Context) {
 		"role":              user.Role,
 		"status":            user.Status,
 		"email":             user.Email,
+		"phone":             user.Phone,
 		"github_id":         user.GitHubId,
 		"discord_id":        user.DiscordId,
 		"oidc_id":           user.OidcId,

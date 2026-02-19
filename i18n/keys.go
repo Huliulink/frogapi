@@ -90,6 +90,9 @@ const (
 	MsgUserTransferFailed            = "user.transfer_failed"
 	MsgUserTopUpProcessing           = "user.topup_processing"
 	MsgUserRegisterFailed            = "user.register_failed"
+	MsgUserPhoneRequired             = "user.phone_required"
+	MsgUserPhoneInvalid              = "user.phone_invalid"
+	MsgUserPhoneExists               = "user.phone_exists"
 	MsgUserDefaultTokenFailed        = "user.default_token_failed"
 	MsgUserAffCodeEmpty              = "user.aff_code_empty"
 	MsgUserEmailEmpty                = "user.email_empty"
@@ -100,6 +103,16 @@ const (
 	MsgUserTelegramIdEmpty           = "user.telegram_id_empty"
 	MsgUserTelegramNotBound          = "user.telegram_not_bound"
 	MsgUserLinuxDOIdEmpty            = "user.linux_do_id_empty"
+)
+
+// Database migration messages
+const (
+	MsgDbMigrationUploadSuccess  = "db_migration.upload_success"
+	MsgDbMigrationExecuteSuccess = "db_migration.execute_success"
+	MsgDbMigrationExecuteFailed  = "db_migration.execute_failed"
+	MsgDbMigrationNotPending     = "db_migration.not_pending"
+	MsgDbMigrationInvalidFile    = "db_migration.invalid_file"
+	MsgDbMigrationFileTooLarge   = "db_migration.file_too_large"
 )
 
 // Quota related messages

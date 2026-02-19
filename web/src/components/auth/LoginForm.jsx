@@ -492,10 +492,13 @@ const LoginForm = () => {
   const renderOAuthOptions = () => {
     return (
       <Card className='border-0 !rounded-2xl overflow-hidden'>
-            <div className='flex justify-center pt-6 pb-2'>
+            <div className='flex flex-col items-center pt-6 pb-2'>
               <Title heading={3} className='text-gray-800 dark:text-gray-200'>
-                {t('登 录')}
+                {t('登录')}
               </Title>
+              <Text className='text-gray-400 mt-1' size='small'>
+                {t('选择您喜欢的方式登录')}
+              </Text>
             </div>
             <div className='px-2 py-8'>
               <div className='space-y-3'>
@@ -628,11 +631,11 @@ const LoginForm = () => {
 
                 <Button
                   theme='solid'
-                  type='primary'
-                  className='w-full h-12 flex items-center justify-center bg-black text-white !rounded-full hover:bg-gray-800 transition-colors'
+                  className='w-full h-12 flex items-center justify-center !rounded-full transition-colors'
                   icon={<IconMail size='large' />}
                   onClick={handleEmailLoginClick}
                   loading={emailLoginLoading}
+                  style={{ background: 'linear-gradient(135deg, #c06143, #d4845e)', borderColor: 'transparent' }}
                 >
                   <span className='ml-3'>{t('使用 邮箱或用户名 登录')}</span>
                 </Button>
@@ -652,7 +655,7 @@ const LoginForm = () => {
                             href='/user-agreement'
                             target='_blank'
                             rel='noopener noreferrer'
-                            className='text-blue-600 hover:text-blue-800 mx-1'
+                            className='mx-1' style={{ color: '#c06143' }}
                           >
                             {t('用户协议')}
                           </a>
@@ -665,7 +668,7 @@ const LoginForm = () => {
                             href='/privacy-policy'
                             target='_blank'
                             rel='noopener noreferrer'
-                            className='text-blue-600 hover:text-blue-800 mx-1'
+                            className='mx-1' style={{ color: '#c06143' }}
                           >
                             {t('隐私政策')}
                           </a>
@@ -682,7 +685,7 @@ const LoginForm = () => {
                     {t('没有账户？')}{' '}
                     <Link
                       to='/register'
-                      className='text-blue-600 hover:text-blue-800 font-medium'
+                      className='font-medium' style={{ color: '#c06143' }}
                     >
                       {t('注册')}
                     </Link>
@@ -697,10 +700,13 @@ const LoginForm = () => {
   const renderEmailLoginForm = () => {
     return (
       <Card className='border-0 !rounded-2xl overflow-hidden'>
-            <div className='flex justify-center pt-6 pb-2'>
+            <div className='flex flex-col items-center pt-6 pb-2'>
               <Title heading={3} className='text-gray-800 dark:text-gray-200'>
-                {t('登 录')}
+                {t('登录')}
               </Title>
+              <Text className='text-gray-400 mt-1' size='small'>
+                {t('使用账号和密码登录您的账户')}
+              </Text>
             </div>
             <div className='px-2 py-8'>
               {status.passkey_login && passkeySupported && (
@@ -718,21 +724,19 @@ const LoginForm = () => {
               <Form className='space-y-3'>
                 <Form.Input
                   field='username'
-                  label={t('用户名或邮箱')}
-                  placeholder={t('请输入您的用户名或邮箱地址')}
+                  label={t('账号')}
+                  placeholder={t('用户名或邮箱')}
                   name='username'
                   onChange={(value) => handleChange('username', value)}
-                  prefix={<IconMail />}
                 />
 
                 <Form.Input
                   field='password'
                   label={t('密码')}
-                  placeholder={t('请输入您的密码')}
+                  placeholder={t('请输入密码')}
                   name='password'
                   mode='password'
                   onChange={(value) => handleChange('password', value)}
-                  prefix={<IconLock />}
                 />
 
                 {(hasUserAgreement || hasPrivacyPolicy) && (
@@ -749,7 +753,8 @@ const LoginForm = () => {
                               href='/user-agreement'
                               target='_blank'
                               rel='noopener noreferrer'
-                              className='text-blue-600 hover:text-blue-800 mx-1'
+                              className='mx-1'
+                              style={{ color: '#c06143' }}
                             >
                               {t('用户协议')}
                             </a>
@@ -762,7 +767,8 @@ const LoginForm = () => {
                               href='/privacy-policy'
                               target='_blank'
                               rel='noopener noreferrer'
-                              className='text-blue-600 hover:text-blue-800 mx-1'
+                              className='mx-1'
+                              style={{ color: '#c06143' }}
                             >
                               {t('隐私政策')}
                             </a>
@@ -777,26 +783,26 @@ const LoginForm = () => {
                   <Button
                     theme='solid'
                     className='w-full !rounded-full'
-                    type='primary'
                     htmlType='submit'
                     onClick={handleSubmit}
                     loading={loginLoading}
                     disabled={
                       (hasUserAgreement || hasPrivacyPolicy) && !agreedToTerms
                     }
+                    style={{ background: 'linear-gradient(135deg, #c06143, #d4845e)', borderColor: 'transparent' }}
                   >
-                    {t('继续')}
+                    {t('登录')}
                   </Button>
+                </div>
 
-                  <Button
-                    theme='borderless'
-                    type='tertiary'
-                    className='w-full !rounded-full'
-                    onClick={handleResetPasswordClick}
-                    loading={resetPasswordLoading}
+                <div className='text-center pt-1'>
+                  <Link
+                    to='/reset'
+                    className='text-sm font-medium'
+                    style={{ color: '#c06143' }}
                   >
                     {t('忘记密码？')}
-                  </Button>
+                  </Link>
                 </div>
               </Form>
 
@@ -828,12 +834,13 @@ const LoginForm = () => {
               {!status.self_use_mode_enabled && (
                 <div className='mt-6 text-center text-sm'>
                   <Text>
-                    {t('没有账户？')}{' '}
+                    {t('还没有账号？')}{' '}
                     <Link
                       to='/register'
-                      className='text-blue-600 hover:text-blue-800 font-medium'
+                      className='font-medium'
+                      style={{ color: '#c06143' }}
                     >
-                      {t('注册')}
+                      {t('立即注册')}
                     </Link>
                   </Text>
                 </div>

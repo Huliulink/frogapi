@@ -107,10 +107,13 @@ const PasswordResetConfirm = () => {
   return (
     <AuthLayout>
       <Card className='border-0 !rounded-2xl overflow-hidden'>
-              <div className='flex justify-center pt-6 pb-2'>
+              <div className='flex flex-col items-center pt-6 pb-2'>
                 <Title heading={3} className='text-gray-800 dark:text-gray-200'>
                   {t('密码重置确认')}
                 </Title>
+                <Text className='text-gray-400 mt-1' size='small'>
+                  {t('确认重置您的账户密码')}
+                </Text>
               </div>
               <div className='px-2 py-8'>
                 {!isValidResetLink && (
@@ -134,7 +137,6 @@ const PasswordResetConfirm = () => {
                     label={t('邮箱')}
                     name='email'
                     disabled={true}
-                    prefix={<IconMail />}
                     placeholder={email ? '' : t('等待获取邮箱信息...')}
                   />
 
@@ -144,7 +146,6 @@ const PasswordResetConfirm = () => {
                       label={t('新密码')}
                       name='newPassword'
                       disabled={true}
-                      prefix={<IconLock />}
                       suffix={
                         <Button
                           icon={<IconCopy />}
@@ -167,13 +168,13 @@ const PasswordResetConfirm = () => {
                     <Button
                       theme='solid'
                       className='w-full !rounded-full'
-                      type='primary'
                       htmlType='submit'
                       onClick={handleSubmit}
                       loading={loading}
                       disabled={
                         disableButton || newPassword || !isValidResetLink
                       }
+                      style={{ background: 'linear-gradient(135deg, #c06143, #d4845e)', borderColor: 'transparent' }}
                     >
                       {newPassword ? t('密码重置完成') : t('确认重置密码')}
                     </Button>
@@ -184,7 +185,8 @@ const PasswordResetConfirm = () => {
                   <Text>
                     <Link
                       to='/login'
-                      className='text-blue-600 hover:text-blue-800 font-medium'
+                      className='font-medium'
+                      style={{ color: '#c06143' }}
                     >
                       {t('返回登录')}
                     </Link>

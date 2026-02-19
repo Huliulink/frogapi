@@ -76,6 +76,7 @@ const RegisterForm = () => {
     username: '',
     password: '',
     password2: '',
+    phone: '',
     email: '',
     verification_code: '',
     wechat_verification_code: '',
@@ -209,6 +210,11 @@ const RegisterForm = () => {
     }
     if (password !== password2) {
       showInfo('两次输入的密码不一致');
+      return;
+    }
+    const phoneRegex = /^1[3-9]\d{9}$/;
+    if (!phoneRegex.test(inputs.phone)) {
+      showInfo('请输入正确的手机号（11位国内手机号）');
       return;
     }
     if (username && password) {
@@ -370,10 +376,13 @@ const RegisterForm = () => {
   const renderOAuthOptions = () => {
     return (
       <Card className='border-0 !rounded-2xl overflow-hidden'>
-            <div className='flex justify-center pt-6 pb-2'>
+            <div className='flex flex-col items-center pt-6 pb-2'>
               <Title heading={3} className='text-gray-800 dark:text-gray-200'>
-                {t('注 册')}
+                {t('注册')}
               </Title>
+              <Text className='text-gray-400 mt-1' size='small'>
+                {t('选择您喜欢的方式注册')}
+              </Text>
             </div>
             <div className='px-2 py-8'>
               <div className='space-y-3'>
@@ -476,11 +485,11 @@ const RegisterForm = () => {
 
                 <Button
                   theme='solid'
-                  type='primary'
-                  className='w-full h-12 flex items-center justify-center bg-black text-white !rounded-full hover:bg-gray-800 transition-colors'
+                  className='w-full h-12 flex items-center justify-center !rounded-full transition-colors'
                   icon={<IconMail size='large' />}
                   onClick={handleEmailRegisterClick}
                   loading={emailRegisterLoading}
+                  style={{ background: 'linear-gradient(135deg, #c06143, #d4845e)', borderColor: 'transparent' }}
                 >
                   <span className='ml-3'>{t('使用 用户名 注册')}</span>
                 </Button>
@@ -491,7 +500,7 @@ const RegisterForm = () => {
                   {t('已有账户？')}{' '}
                   <Link
                     to='/login'
-                    className='text-blue-600 hover:text-blue-800 font-medium'
+                    className='font-medium' style={{ color: '#c06143' }}
                   >
                     {t('登录')}
                   </Link>
@@ -505,10 +514,13 @@ const RegisterForm = () => {
   const renderEmailRegisterForm = () => {
     return (
       <Card className='border-0 !rounded-2xl overflow-hidden'>
-            <div className='flex justify-center pt-6 pb-2'>
+            <div className='flex flex-col items-center pt-6 pb-2'>
               <Title heading={3} className='text-gray-800 dark:text-gray-200'>
-                {t('注 册')}
+                {t('注册')}
               </Title>
+              <Text className='text-gray-400 mt-1' size='small'>
+                {t('创建一个新账号')}
+              </Text>
             </div>
             <div className='px-2 py-8'>
               <Form className='space-y-3'>
@@ -518,7 +530,6 @@ const RegisterForm = () => {
                   placeholder={t('请输入用户名')}
                   name='username'
                   onChange={(value) => handleChange('username', value)}
-                  prefix={<IconUser />}
                 />
 
                 <Form.Input
@@ -528,7 +539,6 @@ const RegisterForm = () => {
                   name='password'
                   mode='password'
                   onChange={(value) => handleChange('password', value)}
-                  prefix={<IconLock />}
                 />
 
                 <Form.Input
@@ -538,7 +548,15 @@ const RegisterForm = () => {
                   name='password2'
                   mode='password'
                   onChange={(value) => handleChange('password2', value)}
-                  prefix={<IconLock />}
+                />
+
+                <Form.Input
+                  field='phone'
+                  label={t('手机号')}
+                  placeholder={t('请输入11位手机号')}
+                  name='phone'
+                  onChange={(value) => handleChange('phone', value)}
+                  addonBefore='+86'
                 />
 
                 {showEmailVerification && (
@@ -556,6 +574,7 @@ const RegisterForm = () => {
                           onClick={sendVerificationCode}
                           loading={verificationCodeLoading}
                           disabled={disableButton || verificationCodeLoading}
+                          style={{ color: '#c06143' }}
                         >
                           {disableButton
                             ? `${t('重新发送')} (${countdown})`
@@ -590,7 +609,7 @@ const RegisterForm = () => {
                               href='/user-agreement'
                               target='_blank'
                               rel='noopener noreferrer'
-                              className='text-blue-600 hover:text-blue-800 mx-1'
+                              className='mx-1' style={{ color: '#c06143' }}
                             >
                               {t('用户协议')}
                             </a>
@@ -603,7 +622,7 @@ const RegisterForm = () => {
                               href='/privacy-policy'
                               target='_blank'
                               rel='noopener noreferrer'
-                              className='text-blue-600 hover:text-blue-800 mx-1'
+                              className='mx-1' style={{ color: '#c06143' }}
                             >
                               {t('隐私政策')}
                             </a>
@@ -618,13 +637,13 @@ const RegisterForm = () => {
                   <Button
                     theme='solid'
                     className='w-full !rounded-full'
-                    type='primary'
                     htmlType='submit'
                     onClick={handleSubmit}
                     loading={registerLoading}
                     disabled={
                       (hasUserAgreement || hasPrivacyPolicy) && !agreedToTerms
                     }
+                    style={{ background: 'linear-gradient(135deg, #c06143, #d4845e)', borderColor: 'transparent' }}
                   >
                     {t('注册')}
                   </Button>
@@ -661,7 +680,7 @@ const RegisterForm = () => {
                   {t('已有账户？')}{' '}
                   <Link
                     to='/login'
-                    className='text-blue-600 hover:text-blue-800 font-medium'
+                    className='font-medium' style={{ color: '#c06143' }}
                   >
                     {t('登录')}
                   </Link>

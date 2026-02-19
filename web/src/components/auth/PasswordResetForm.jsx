@@ -107,10 +107,13 @@ const PasswordResetForm = () => {
   return (
     <AuthLayout>
       <Card className='border-0 !rounded-2xl overflow-hidden'>
-              <div className='flex justify-center pt-6 pb-2'>
+              <div className='flex flex-col items-center pt-6 pb-2'>
                 <Title heading={3} className='text-gray-800 dark:text-gray-200'>
                   {t('密码重置')}
                 </Title>
+                <Text className='text-gray-400 mt-1' size='small'>
+                  {t('输入邮箱地址以重置密码')}
+                </Text>
               </div>
               <div className='px-2 py-8'>
                 <Form className='space-y-3'>
@@ -121,18 +124,17 @@ const PasswordResetForm = () => {
                     name='email'
                     value={email}
                     onChange={handleChange}
-                    prefix={<IconMail />}
                   />
 
                   <div className='space-y-2 pt-2'>
                     <Button
                       theme='solid'
                       className='w-full !rounded-full'
-                      type='primary'
                       htmlType='submit'
                       onClick={handleSubmit}
                       loading={loading}
                       disabled={disableButton}
+                      style={{ background: 'linear-gradient(135deg, #c06143, #d4845e)', borderColor: 'transparent' }}
                     >
                       {disableButton
                         ? `${t('重试')} (${countdown})`
@@ -146,7 +148,8 @@ const PasswordResetForm = () => {
                     {t('想起来了？')}{' '}
                     <Link
                       to='/login'
-                      className='text-blue-600 hover:text-blue-800 font-medium'
+                      className='font-medium'
+                      style={{ color: '#c06143' }}
                     >
                       {t('登录')}
                     </Link>
