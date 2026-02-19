@@ -65,7 +65,7 @@ code {
 /* ==================== 导航和侧边栏样式 ==================== */
 .semi-navigation-item {
   margin-bottom: 4px !important;
-  padding: 4px 12px !important;
+  padding: 8px 12px !important;
 }
 
 .semi-navigation-sub-title {

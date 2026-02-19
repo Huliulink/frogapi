@@ -1,91 +1,55 @@
-import React, { useMemo } from 'react';
-import { Table, Tag } from '@douyinfe/semi-ui';
+import React from 'react';
+import { Table, Tag, RadioGroup, Radio, Banner } from '@douyinfe/semi-ui';
 import { useTranslation } from 'react-i18next';
+import { Server } from 'lucide-react';
 
-const ModelListTable = ({ endpoints, selectedEndpointId, currency, exchangeRate }) => {
+const ModelListTable = ({
+  endpoint,
+  models,
+  priceType,
+  onPriceTypeChange,
+  currency,
+  onCurrencyChange,
+  exchangeRate,
+}) => {
   const { t } = useTranslation();
 
   const formatPrice = (price) => {
     if (!price || price === 0) return '-';
     const converted = currency === 'CNY' ? price * exchangeRate : price;
     const symbol = currency === 'CNY' ? '¥' : '$';
-    return `${symbol}${converted.toFixed(4)}`;
+    return `${symbol}${converted.toFixed(2)}/M`;
   };
 
-  const models = useMemo(() => {
-    const result = [];
-    const filteredEndpoints = selectedEndpointId
-      ? endpoints.filter((ep) => ep.id === selectedEndpointId)
-      : endpoints;
-
-    filteredEndpoints.forEach((ep) => {
-      if (ep.models) {
-        ep.models.forEach((model) => {
-          result.push({
-            ...model,
-            endpoint_name: ep.name,
-            endpoint_icon: ep.icon,
-          });
-        });
-      }
-    });
-    return result;
-  }, [endpoints, selectedEndpointId]);
+  const inputKey = priceType === 'official' ? 'official_input_price' : 'site_input_price';
+  const outputKey = priceType === 'official' ? 'official_output_price' : 'site_output_price';
 
   const columns = [
     {
-      title: t('模型名称'),
+      title: t('模型'),
       dataIndex: 'model_name',
       key: 'model_name',
-      render: (text) => (
-        <span className='font-medium text-sm'>{text}</span>
-      ),
+      render: (text) => <span className='font-medium text-sm'>{text}</span>,
     },
     {
-      title: t('端点'),
-      dataIndex: 'endpoint_name',
-      key: 'endpoint_name',
-      render: (text) => (
-        <Tag size='small' color='blue'>
-          {text}
-        </Tag>
-      ),
-    },
-    {
-      title: t('官方输入价格'),
-      dataIndex: 'official_input_price',
-      key: 'official_input_price',
-      render: (price) => formatPrice(price),
-      align: 'right',
-    },
-    {
-      title: t('官方输出价格'),
-      dataIndex: 'official_output_price',
-      key: 'official_output_price',
-      render: (price) => formatPrice(price),
-      align: 'right',
-    },
-    {
-      title: t('本站输入价格'),
-      dataIndex: 'site_input_price',
-      key: 'site_input_price',
+      title: t('输入价格'),
+      dataIndex: inputKey,
+      key: 'input_price',
       render: (price) => (
-        <span style={{ color: 'var(--semi-color-success)' }}>
-          {formatPrice(price)}
-        </span>
+        <span style={{ color: 'var(--semi-color-text-0)' }}>{formatPrice(price)}</span>
       ),
       align: 'right',
+      width: 140,
     },
     {
-      title: t('本站输出价格'),
-      dataIndex: 'site_output_price',
-      key: 'site_output_price',
+      title: t('输出价格'),
+      dataIndex: outputKey,
+      key: 'output_price',
       render: (price) => (
-        <span style={{ color: 'var(--semi-color-success)' }}>
-          {formatPrice(price)}
-        </span>
+        <span style={{ color: 'var(--semi-color-success)' }}>{formatPrice(price)}</span>
       ),
       align: 'right',
+      width: 140,
     },
     {
       title: t('状态'),
@@ -97,22 +61,83 @@ const ModelListTable = ({ endpoints, selectedEndpointId, currency, exchangeRate 
         </Tag>
       ),
       width: 80,
+      align: 'center',
     },
   ];
 
+  if (!endpoint) {
+    return (
+      <div className='flex items-center justify-center' style={{ height: 300, color: 'var(--semi-color-text-2)' }}>
+        {t('请选择一个端点')}
+      </div>
+    );
+  }
+
   return (
-    <Table
-      columns={columns}
-      dataSource={models}
-      rowKey='id'
-      pagination={{
-        pageSize: 20,
-        showSizeChanger: true,
-        pageSizeOpts: [10, 20, 50, 100],
-      }}
-      size='small'
-      empty={t('暂无模型数据')}
-    />
+    <div>
+      {/* Header */}
+      <div
+        className='flex items-center justify-between px-4 py-3'
+        style={{ borderBottom: '1px solid var(--semi-color-border)' }}
+      >
+        <div className='flex items-center gap-2'>
+          <Server size={16} style={{ color: 'var(--semi-color-primary)' }} />
+          <span className='text-sm font-semibold' style={{ color: 'var(--semi-color-text-0)' }}>
+            {endpoint.name}
+          </span>
+        </div>
+      </div>
+
+      {/* Toggles */}
+      <div className='flex items-center justify-between px-4 py-3'>
+        <RadioGroup
+          type='button'
+          size='small'
+          value={priceType}
+          onChange={(e) => onPriceTypeChange(e.target.value)}
+        >
+          <Radio value='official'>{t('官方价格')}</Radio>
+          <Radio value='site'>{t('本站价格')}</Radio>
+        </RadioGroup>
+
+        <RadioGroup
+          type='button'
+          size='small'
+          value={currency}
+          onChange={(e) => onCurrencyChange(e.target.value)}
+        >
+          <Radio value='USD'>$</Radio>
+          <Radio value='CNY'>¥</Radio>
+        </RadioGroup>
+      </div>
+
+      {/* Info banner */}
+      {endpoint.url && (
+        <div className='px-4 pb-2'>
+          <Banner
+            type='info'
+            description={`${t('端点URL')}: ${endpoint.url}${endpoint.ratio && endpoint.ratio !== 1 ? ` | ${t('计费倍率')}: ${endpoint.ratio}x` : ''}`}
+            closeIcon={null}
+          />
+        </div>
+      )}
+
+      {/* Table */}
+      <div className='px-2'>
+        <Table
+          columns={columns}
+          dataSource={models}
+          rowKey='id'
+          pagination={{
+            pageSize: 20,
+            showSizeChanger: true,
+            pageSizeOpts: [10, 20, 50, 100],
+          }}
+          size='small'
+          empty={t('暂无模型数据')}
+        />
+      </div>
+    </div>
   );
 };
 
