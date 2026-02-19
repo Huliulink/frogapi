@@ -47,6 +47,7 @@ const routerMap = {
   task: '/console/task',
   models: '/console/models',
   deployment: '/console/deployment',
+  modelList: '/console/model-list',
   playground: '/console/playground',
   personal: '/console/personal',
 };
@@ -83,6 +84,11 @@ const SiderBar = ({ onNavigate = () => {} }) => {
         text: t('令牌管理'),
         itemKey: 'token',
         to: '/token',
+      },
+      {
+        text: t('模型列表'),
+        itemKey: 'modelList',
+        to: '/model-list',
       },
       {
         text: t('使用日志'),

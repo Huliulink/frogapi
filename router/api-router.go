@@ -321,6 +321,23 @@ func SetApiRouter(router *gin.Engine) {
 			taskRoute.GET("/", middleware.AdminAuth(), controller.GetAllTask)
 		}
 
+		// Model List (用户端 + 管理端)
+		modelListRoute := apiRouter.Group("/model-list")
+		modelListRoute.GET("/", middleware.UserAuth(), controller.GetModelList)
+		modelListAdminRoute := modelListRoute.Group("/admin")
+		modelListAdminRoute.Use(middleware.RootAuth())
+		{
+			modelListAdminRoute.GET("/endpoints", controller.GetModelListEndpoints)
+			modelListAdminRoute.POST("/endpoints", controller.CreateModelListEndpoint)
+			modelListAdminRoute.PUT("/endpoints", controller.UpdateModelListEndpoint)
+			modelListAdminRoute.DELETE("/endpoints/:id", controller.DeleteModelListEndpoint)
+			modelListAdminRoute.GET("/endpoints/:id/models", controller.GetModelListEndpointModels)
+			modelListAdminRoute.POST("/models", controller.CreateModelListItem)
+			modelListAdminRoute.PUT("/models", controller.UpdateModelListItem)
+			modelListAdminRoute.DELETE("/models/:id", controller.DeleteModelListItem)
+			modelListAdminRoute.POST("/sync", controller.SyncModelList)
+		}
+
 		vendorRoute := apiRouter.Group("/vendors")
 		vendorRoute.Use(middleware.AdminAuth())
 		{

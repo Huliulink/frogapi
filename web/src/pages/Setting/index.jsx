@@ -35,6 +35,7 @@ import {
   Server,
   Activity,
   Database,
+  LayoutList,
 } from 'lucide-react';
 
 import SystemSetting from '../../components/settings/SystemSetting';
@@ -51,6 +52,7 @@ import PaymentSetting from '../../components/settings/PaymentSetting';
 import ModelDeploymentSetting from '../../components/settings/ModelDeploymentSetting';
 import PerformanceSetting from '../../components/settings/PerformanceSetting';
 import DatabaseUpdateSetting from '../../components/settings/DatabaseUpdateSetting';
+import ModelListSetting from '../../components/settings/ModelListSetting';
 
 const Setting = () => {
   const { t } = useTranslation();
@@ -149,6 +151,16 @@ const Setting = () => {
       ),
       content: <ModelDeploymentSetting />,
       itemKey: 'model-deployment',
+    });
+    panes.push({
+      tab: (
+        <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+          <LayoutList size={18} />
+          {t('模型列表设置')}
+        </span>
+      ),
+      content: <ModelListSetting />,
+      itemKey: 'model-list',
     });
     panes.push({
       tab: (
