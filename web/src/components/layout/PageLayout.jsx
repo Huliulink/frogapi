@@ -123,13 +123,17 @@ const PageLayout = () => {
 
   return (
     <Layout
-      className='app-layout'
+      className={`app-layout ${!isFullScreenPage ? 'admin-with-bg' : ''}`}
       style={{
         display: 'flex',
         flexDirection: 'column',
         overflow: isMobile ? 'visible' : 'hidden',
       }}
     >
+      {/* Admin background image */}
+      {!isFullScreenPage && (
+        <div className='fixed inset-0 home-bg-image' style={{ zIndex: 0 }} />
+      )}
       {!isFullScreenPage && (
         <Header
           style={{
