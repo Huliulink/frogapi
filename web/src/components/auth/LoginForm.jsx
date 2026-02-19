@@ -636,7 +636,7 @@ const LoginForm = () => {
                   icon={<IconMail size='large' />}
                   onClick={handleEmailLoginClick}
                   loading={emailLoginLoading}
-                  style={{ background: 'linear-gradient(135deg, #c06143, #d4845e)', borderColor: 'transparent' }}
+                  style={{ background: '#c6613f', borderColor: 'transparent' }}
                 >
                   <span className='ml-3'>{t('使用 邮箱或用户名 登录')}</span>
                 </Button>
@@ -656,7 +656,7 @@ const LoginForm = () => {
                             href='/user-agreement'
                             target='_blank'
                             rel='noopener noreferrer'
-                            className='mx-1' style={{ color: '#c06143' }}
+                            className='mx-1' style={{ color: '#c6613f' }}
                           >
                             {t('用户协议')}
                           </a>
@@ -669,7 +669,7 @@ const LoginForm = () => {
                             href='/privacy-policy'
                             target='_blank'
                             rel='noopener noreferrer'
-                            className='mx-1' style={{ color: '#c06143' }}
+                            className='mx-1' style={{ color: '#c6613f' }}
                           >
                             {t('隐私政策')}
                           </a>
@@ -686,7 +686,7 @@ const LoginForm = () => {
                     {t('没有账户？')}{' '}
                     <Link
                       to='/register'
-                      className='font-medium' style={{ color: '#c06143' }}
+                      className='font-medium' style={{ color: '#c6613f' }}
                     >
                       {t('注册')}
                     </Link>
@@ -753,7 +753,7 @@ const LoginForm = () => {
                               target='_blank'
                               rel='noopener noreferrer'
                               className='mx-1'
-                              style={{ color: '#c06143' }}
+                              style={{ color: '#c6613f' }}
                             >
                               {t('用户协议')}
                             </a>
@@ -767,7 +767,7 @@ const LoginForm = () => {
                               target='_blank'
                               rel='noopener noreferrer'
                               className='mx-1'
-                              style={{ color: '#c06143' }}
+                              style={{ color: '#c6613f' }}
                             >
                               {t('隐私政策')}
                             </a>
@@ -788,7 +788,7 @@ const LoginForm = () => {
                     disabled={
                       (hasUserAgreement || hasPrivacyPolicy) && !agreedToTerms
                     }
-                    style={{ background: 'linear-gradient(135deg, #c06143, #d4845e)', borderColor: 'transparent' }}
+                    style={{ background: '#c6613f', borderColor: 'transparent' }}
                   >
                     {t('登录')}
                   </Button>
@@ -798,7 +798,7 @@ const LoginForm = () => {
                   <Link
                     to='/reset'
                     className='text-sm font-medium'
-                    style={{ color: '#c06143' }}
+                    style={{ color: '#c6613f' }}
                   >
                     {t('忘记密码？')}
                   </Link>
@@ -837,7 +837,7 @@ const LoginForm = () => {
                     <Link
                       to='/register'
                       className='font-medium'
-                      style={{ color: '#c06143' }}
+                      style={{ color: '#c6613f' }}
                     >
                       {t('立即注册')}
                     </Link>

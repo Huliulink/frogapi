@@ -174,7 +174,7 @@ const PasswordResetConfirm = () => {
                       disabled={
                         disableButton || newPassword || !isValidResetLink
                       }
-                      style={{ background: 'linear-gradient(135deg, #c06143, #d4845e)', borderColor: 'transparent' }}
+                      style={{ background: '#c6613f', borderColor: 'transparent' }}
                     >
                       {newPassword ? t('密码重置完成') : t('确认重置密码')}
                     </Button>
@@ -186,7 +186,7 @@ const PasswordResetConfirm = () => {
                     <Link
                       to='/login'
                       className='font-medium'
-                      style={{ color: '#c06143' }}
+                      style={{ color: '#c6613f' }}
                     >
                       {t('返回登录')}
                     </Link>

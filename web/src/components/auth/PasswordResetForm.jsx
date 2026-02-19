@@ -134,7 +134,7 @@ const PasswordResetForm = () => {
                       onClick={handleSubmit}
                       loading={loading}
                       disabled={disableButton}
-                      style={{ background: 'linear-gradient(135deg, #c06143, #d4845e)', borderColor: 'transparent' }}
+                      style={{ background: '#c6613f', borderColor: 'transparent' }}
                     >
                       {disableButton
                         ? `${t('重试')} (${countdown})`
@@ -149,7 +149,7 @@ const PasswordResetForm = () => {
                     <Link
                       to='/login'
                       className='font-medium'
-                      style={{ color: '#c06143' }}
+                      style={{ color: '#c6613f' }}
                     >
                       {t('登录')}
                     </Link>

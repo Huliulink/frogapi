@@ -132,12 +132,8 @@ const Home = () => {
                       className='relative inline-block font-frog-api font-extrabold tracking-wide leading-[1.12] select-none'
                     >
                       <span
-                        className='bg-clip-text'
                         style={{
-                          backgroundImage:
-                            'linear-gradient(to right, #c06143, #c28067, #eabaa2)',
-                          WebkitBackgroundClip: 'text',
-                          WebkitTextFillColor: 'transparent',
+                          color: '#c6613f',
                         }}
                       >
                         Frog API
@@ -161,7 +157,7 @@ const Home = () => {
                         className='inline-flex items-center justify-center min-w-24 h-12 px-8 text-medium gap-3 rounded-xl font-medium transition-all duration-200 hover:opacity-90 hover:scale-[0.98] active:scale-[0.97]'
                         style={{
                           backgroundImage:
-                            'linear-gradient(to right, #c06143, #e07850)',
+                            '#c6613f',
                           color: '#fff',
                           boxShadow: '0 10px 15px -3px rgba(249, 115, 22, 0.25)',
                         }}

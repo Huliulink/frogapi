@@ -38,12 +38,8 @@ const AuthLayout = ({ children }) => {
             className='relative inline-block font-frog-api font-extrabold tracking-wide select-none text-6xl lg:text-7xl'
           >
             <span
-              className='bg-clip-text'
               style={{
-                backgroundImage:
-                  'linear-gradient(to right, #c06143, #c28067, #eabaa2)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
+                color: '#c6613f',
               }}
             >
               Frog API
