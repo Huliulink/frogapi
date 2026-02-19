@@ -1047,10 +1047,15 @@ html.dark .auth-glass-panel {
 
 html.dark .auth-input-group input {
   border-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(22, 22, 26, 1);
 }
 
 html.dark .auth-input-group :is(input:focus, input:not(:placeholder-shown)) {
   border-color: rgba(150, 150, 200, 0.6);
+}
+
+html.dark .auth-input-group :is(input:focus, input:not(:placeholder-shown)) ~ label {
+  background-color: rgba(22, 22, 26, 1);
 }
 
 html.dark .auth-input-group label {

@@ -83,6 +83,12 @@ func ExecuteDbMigrationSQL(migration *DbMigration) error {
 		return err
 	}
 
-	UpdateDbMigrationStatus(migration.Id, DbMigrationStatusCompleted, "")
+	// 标记完成并清除 SQL 内容（自动删除文件）
+	DB.Model(&DbMigration{}).Where("id = ?", migration.Id).Updates(map[string]interface{}{
+		"status":      DbMigrationStatusCompleted,
+		"error_msg":   "",
+		"sql_content": "",
+		"executed_at": time.Now().Unix(),
+	})
 	return nil
 }
