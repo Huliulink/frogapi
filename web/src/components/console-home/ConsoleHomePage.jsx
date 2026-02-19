@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Card, Timeline, Empty, Avatar, Tag, Spin } from '@douyinfe/semi-ui';
+import { Card, Timeline, Empty, Avatar, Tag, Spin, Input, Button, Toast, Typography, Badge } from '@douyinfe/semi-ui';
 import {
   Wallet,
   TrendingDown,
@@ -14,6 +15,9 @@ import {
   Mail,
   IdCard,
   UserCircle,
+  Gift,
+  Copy,
+  ArrowRight,
 } from 'lucide-react';
 import { marked } from 'marked';
 import {
@@ -23,6 +27,8 @@ import {
 import { API, showError, renderQuota } from '../../helpers';
 import { StatusContext } from '../../context/Status';
 import { UserContext } from '../../context/User';
+
+const { Text } = Typography;
 
 const StatCard = ({ icon: Icon, title, value, color }) => (
   <Card bodyStyle={{ padding: '16px' }}>
@@ -47,6 +53,7 @@ const StatCard = ({ icon: Icon, title, value, color }) => (
 
 const ConsoleHomePage = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [statusState] = useContext(StatusContext);
   const [userState, userDispatch] = useContext(UserContext);
   const [loading, setLoading] = useState(true);
@@ -54,7 +61,18 @@ const ConsoleHomePage = () => {
 
   const user = userState?.user || {};
 
-  // 获取用户数据
+  const affLink = useMemo(() => {
+    const code = user.aff_code || user.id || '';
+    return code ? `${window.location.origin}/register?aff=${code}` : '';
+  }, [user.aff_code, user.id]);
+
+  const handleCopyAffLink = () => {
+    if (!affLink) return;
+    navigator.clipboard.writeText(affLink).then(() => {
+      Toast.success(t('已复制'));
+    });
+  };
+
   const loadUserData = async () => {
     try {
       const res = await API.get('/api/user/self');
@@ -66,7 +84,6 @@ const ConsoleHomePage = () => {
     }
   };
 
-  // 获取统计数据
   const loadStatsData = async () => {
     try {
       const now = Math.floor(Date.now() / 1000);
@@ -100,11 +117,9 @@ const ConsoleHomePage = () => {
     init();
   }, []);
 
-  // 性能指标
   const avgRPM = statsData.times > 0 ? (statsData.times / 1440).toFixed(3) : '0';
   const avgTPM = statsData.tokens > 0 ? (statsData.tokens / 1440).toFixed(3) : '0';
 
-  // 公告数据
   const announcements = useMemo(() => {
     try {
       const raw = statusState?.status?.announcements;
@@ -119,7 +134,6 @@ const ConsoleHomePage = () => {
     }
   }, [statusState?.status?.announcements]);
 
-  // 问候语
   const greeting = useMemo(() => {
     const h = new Date().getHours();
     if (h >= 5 && h < 12) return t('早上好');
@@ -139,19 +153,11 @@ const ConsoleHomePage = () => {
     { icon: Zap, title: t('平均TPM'), value: avgTPM, color: '#f97316' },
   ];
 
-  const typeColorMap = {
-    default: 'grey',
-    ongoing: 'blue',
-    success: 'green',
-    warning: 'orange',
-    error: 'red',
-  };
-
   return (
     <div className='mt-[60px] px-4'>
       <Spin spinning={loading}>
         {/* 问候 + 账户信息 */}
-        <Card className='mb-4' bodyStyle={{ padding: '20px 24px' }}>
+        <Card bodyStyle={{ padding: '20px 24px' }}>
           <div className='flex flex-col md:flex-row md:items-center md:justify-between gap-4'>
             <div className='flex items-center gap-4'>
               <Avatar size='large' style={{ backgroundColor: '#c6613f' }}>
@@ -159,7 +165,7 @@ const ConsoleHomePage = () => {
               </Avatar>
               <div>
                 <div className='text-xl font-semibold' style={{ color: 'var(--semi-color-text-0)' }}>
-                  {greeting}，{user.display_name || user.username || '-'}
+                  👋{greeting}，{user.username || '-'}
                 </div>
                 <div className='flex flex-wrap items-center gap-3 mt-1 text-sm' style={{ color: 'var(--semi-color-text-2)' }}>
                   <span className='flex items-center gap-1'>
@@ -185,8 +191,8 @@ const ConsoleHomePage = () => {
           </div>
         </Card>
 
-        {/* 统计卡片 */}
-        <div className='grid grid-cols-2 md:grid-cols-4 gap-3 mb-4'>
+        {/* 统计卡片 - 紧贴账户信息 */}
+        <div className='grid grid-cols-2 md:grid-cols-4 gap-3 mt-3 mb-4'>
           {stats.map((s) => (
             <StatCard key={s.title} {...s} />
           ))}
@@ -194,6 +200,7 @@ const ConsoleHomePage = () => {
 
         {/* 系统公告 */}
         <Card
+          className='mb-4'
           title={
             <div className='flex items-center gap-2'>
               <Bell size={16} />
@@ -227,6 +234,69 @@ const ConsoleHomePage = () => {
               />
             </div>
           )}
+        </Card>
+
+        {/* 邀请奖励 */}
+        <Card
+          title={
+            <div className='flex items-center gap-2'>
+              <Gift size={16} />
+              {t('邀请奖励')}
+              <Text type='tertiary' size='small'>{t('邀请好友获得额外奖励')}</Text>
+            </div>
+          }
+        >
+          <div className='flex flex-col gap-4'>
+            {/* 邀请链接 */}
+            <div>
+              <div className='text-sm mb-2' style={{ color: 'var(--semi-color-text-2)' }}>
+                {t('邀请链接')}
+              </div>
+              <Input
+                value={affLink}
+                readonly
+                className='!rounded-lg'
+                suffix={
+                  <Button
+                    theme='solid'
+                    size='small'
+                    icon={<Copy size={14} />}
+                    onClick={handleCopyAffLink}
+                    className='!rounded-lg'
+                  >
+                    {t('复制')}
+                  </Button>
+                }
+              />
+            </div>
+
+            {/* 奖励说明 */}
+            <div className='space-y-2'>
+              <div className='flex items-start gap-2'>
+                <Badge dot type='success' />
+                <Text type='tertiary' size='small'>
+                  {t('邀请好友注册，好友充值后您可获得相应奖励')}
+                </Text>
+              </div>
+              <div className='flex items-start gap-2'>
+                <Badge dot type='success' />
+                <Text type='tertiary' size='small'>
+                  {t('通过划转功能将奖励额度转入到您的账户余额中')}
+                </Text>
+              </div>
+            </div>
+
+            {/* 前往钱包管理 */}
+            <Button
+              theme='light'
+              icon={<ArrowRight size={14} />}
+              iconPosition='right'
+              onClick={() => navigate('/console/topup')}
+              className='!rounded-lg self-start'
+            >
+              {t('前往钱包管理')}
+            </Button>
+          </div>
         </Card>
       </Spin>
     </div>

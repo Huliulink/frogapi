@@ -245,7 +245,7 @@ const LoginForm = () => {
               centered: true,
             });
           }
-          navigate('/console');
+          navigate('/console/home');
         } else {
           showError(message);
         }
@@ -446,7 +446,7 @@ const LoginForm = () => {
         setUserData(finish.data);
         updateAPI();
         showSuccess('登录成功！');
-        navigate('/console');
+        navigate('/console/home');
       } else {
         showError(finish.message || 'Passkey 登录失败，请重试');
       }
@@ -481,7 +481,7 @@ const LoginForm = () => {
     setUserData(data);
     updateAPI();
     showSuccess('登录成功！');
-    navigate('/console');
+    navigate('/console/home');
   };
 
   // 返回登录页面
