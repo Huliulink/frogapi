@@ -871,12 +871,6 @@ html.dark .with-pastel-balls::before {
 
 .font-frog-api {
   font-family: 'BitcountGridDouble', monospace;
-  -webkit-text-stroke: 2px rgba(255, 255, 255, 0.65);
-  paint-order: fill stroke;
-}
-
-html.dark .font-frog-api {
-  -webkit-text-stroke: 2px rgba(0, 0, 0, 0.55);
 }
 
 @keyframes home-fade-in-up {
