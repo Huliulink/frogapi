@@ -210,7 +210,7 @@ const ConsoleHomePage = () => {
           bodyStyle={{ padding: announcements.length > 0 ? '16px' : 0 }}
         >
           {announcements.length > 0 ? (
-            <Timeline mode='left'>
+            <Timeline mode='left' className='announcement-timeline'>
               {announcements.map((item, idx) => (
                 <Timeline.Item
                   key={item.id || idx}

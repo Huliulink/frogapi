@@ -1122,6 +1122,14 @@ html.dark .admin-with-bg .sidebar-container {
   }
 }
 
+/* ==================== 系统公告时间线间距 ==================== */
+.announcement-timeline .semi-timeline-item {
+  padding-bottom: 24px;
+}
+.announcement-timeline .semi-timeline-item:last-child {
+  padding-bottom: 0;
+}
+
 /* ==================== 自定义圆角样式 ==================== */
 .semi-radio,
 .semi-tagInput,

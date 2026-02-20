@@ -25,18 +25,19 @@ import {
   Toast,
   Typography,
   Select,
+  Card,
 } from '@douyinfe/semi-ui';
+import { Key } from 'lucide-react';
 import {
   API,
   showError,
   getModelCategories,
   selectFilter,
 } from '../../../helpers';
-import CardPro from '../../common/ui/CardPro';
 import TokensTable from './TokensTable';
 import TokensActions from './TokensActions';
 import TokensFilters from './TokensFilters';
-import TokensDescription from './TokensDescription';
+import CompactModeToggle from '../../common/ui/CompactModeToggle';
 import EditTokenModal from './modals/EditTokenModal';
 import { useTokensData } from '../../../hooks/tokens/useTokensData';
 import { useIsMobile } from '../../../hooks/common/useIsMobile';
@@ -354,8 +355,18 @@ function TokensPage() {
     t,
   } = tokensData;
 
+  const paginationArea = createCardProPagination({
+    currentPage: tokensData.activePage,
+    pageSize: tokensData.pageSize,
+    total: tokensData.tokenCount,
+    onPageChange: tokensData.handlePageChange,
+    onPageSizeChange: tokensData.handlePageSizeChange,
+    isMobile: isMobile,
+    t: tokensData.t,
+  });
+
   return (
-    <>
+    <div className='mt-[60px] px-4'>
       <EditTokenModal
         refresh={refresh}
         editingToken={editingToken}
@@ -363,53 +374,71 @@ function TokensPage() {
         handleClose={closeEdit}
       />
 
-      <CardPro
-        type='type1'
-        descriptionArea={
-          <TokensDescription
+      {/* 标题卡片 */}
+      <Card bodyStyle={{ padding: '20px 24px' }}>
+        <div className='flex flex-col md:flex-row md:items-center md:justify-between gap-4'>
+          <div className='flex items-center gap-3'>
+            <div
+              className='flex items-center justify-center w-10 h-10 rounded-lg'
+              style={{ backgroundColor: '#3b82f615' }}
+            >
+              <Key size={20} style={{ color: '#3b82f6' }} />
+            </div>
+            <div>
+              <div className='text-xl font-semibold' style={{ color: 'var(--semi-color-text-0)' }}>
+                {t('令牌管理')}
+              </div>
+              <div className='text-sm' style={{ color: 'var(--semi-color-text-2)' }}>
+                {t('创建和管理您的 API 令牌')}
+              </div>
+            </div>
+          </div>
+          <CompactModeToggle
             compactMode={compactMode}
             setCompactMode={setCompactMode}
             t={t}
           />
-        }
-        actionsArea={
-          <div className='flex flex-col md:flex-row justify-between items-center gap-2 w-full'>
-            <TokensActions
-              selectedKeys={selectedKeys}
-              setEditingToken={setEditingToken}
-              setShowEdit={setShowEdit}
-              batchCopyTokens={batchCopyTokens}
-              batchDeleteTokens={batchDeleteTokens}
-              copyText={copyText}
+        </div>
+      </Card>
+
+      {/* 操作与筛选卡片 */}
+      <Card className='mt-3' bodyStyle={{ padding: '16px 24px' }}>
+        <div className='flex flex-col md:flex-row justify-between items-center gap-3 w-full'>
+          <TokensActions
+            selectedKeys={selectedKeys}
+            setEditingToken={setEditingToken}
+            setShowEdit={setShowEdit}
+            batchCopyTokens={batchCopyTokens}
+            batchDeleteTokens={batchDeleteTokens}
+            copyText={copyText}
+            t={t}
+          />
+          <div className='w-full md:w-auto'>
+            <TokensFilters
+              formInitValues={formInitValues}
+              setFormApi={setFormApi}
+              searchTokens={searchTokens}
+              loading={loading}
+              searching={searching}
               t={t}
             />
-
-            <div className='w-full md:w-full lg:w-auto order-1 md:order-2'>
-              <TokensFilters
-                formInitValues={formInitValues}
-                setFormApi={setFormApi}
-                searchTokens={searchTokens}
-                loading={loading}
-                searching={searching}
-                t={t}
-              />
-            </div>
           </div>
-        }
-        paginationArea={createCardProPagination({
-          currentPage: tokensData.activePage,
-          pageSize: tokensData.pageSize,
-          total: tokensData.tokenCount,
-          onPageChange: tokensData.handlePageChange,
-          onPageSizeChange: tokensData.handlePageSizeChange,
-          isMobile: isMobile,
-          t: tokensData.t,
-        })}
-        t={tokensData.t}
-      >
+        </div>
+      </Card>
+
+      {/* 表格卡片 */}
+      <Card className='mt-3 mb-4' bodyStyle={{ padding: 0 }}>
         <TokensTable {...tokensData} />
-      </CardPro>
-    </>
+        {paginationArea && (
+          <div
+            className={`flex w-full px-4 py-3 border-t ${isMobile ? 'justify-center' : 'justify-between items-center'}`}
+            style={{ borderColor: 'var(--semi-color-border)' }}
+          >
+            {paginationArea}
+          </div>
+        )}
+      </Card>
+    </div>
   );
 }
 
