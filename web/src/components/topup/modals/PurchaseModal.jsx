@@ -130,7 +130,8 @@ const PurchaseModal = ({
       footer={null}
       maskClosable={false}
       centered
-      style={{ maxWidth: 480 }}
+      size='medium'
+      style={{ maxWidth: 640 }}
     >
       <div className='space-y-4'>
         {/* 商品信息 */}

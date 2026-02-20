@@ -33,18 +33,21 @@ const AuthLayout = ({ children }) => {
       {/* Left Side - Artistic Text */}
       {!isMobile && (
         <div className='w-1/2 flex items-center justify-center relative z-10'>
-          <h1
-            aria-label='Frog API'
-            className='relative inline-block font-frog-api font-extrabold tracking-wide select-none text-6xl lg:text-7xl'
-          >
-            <span
-              style={{
-                color: '#c6613f',
-              }}
+          <div className='text-center'>
+            <h1
+              aria-label='Frog API'
+              className='relative inline-block font-frog-api font-extrabold tracking-wide select-none text-6xl lg:text-7xl'
             >
-              Frog API
-            </span>
-          </h1>
+              <span
+                style={{
+                  color: '#c6613f',
+                }}
+              >
+                Frog API
+              </span>
+            </h1>
+            <p className='mt-2 text-xs text-gray-400 tracking-widest'>企业级 AI Agent 分发平台</p>
+          </div>
         </div>
       )}
 
