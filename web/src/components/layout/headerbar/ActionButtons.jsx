@@ -18,6 +18,8 @@ For commercial licensing, please contact support@quantumnous.com
 */
 
 import React from 'react';
+import { Wallet } from 'lucide-react';
+import { renderQuota } from '../../../helpers';
 import NewYearButton from './NewYearButton';
 import NotificationButton from './NotificationButton';
 import ThemeToggle from './ThemeToggle';
@@ -57,6 +59,23 @@ const ActionButtons = ({
         onLanguageChange={onLanguageChange}
         t={t}
       />
+
+      {userState?.user && !isMobile && (
+        <div
+          className='flex items-center gap-1.5 px-2.5 py-1 rounded-lg cursor-pointer transition-colors'
+          style={{
+            color: 'var(--semi-color-text-1)',
+            backgroundColor: 'var(--semi-color-fill-0)',
+          }}
+          onClick={() => navigate('/console/topup')}
+          title={t('当前余额')}
+        >
+          <Wallet size={14} />
+          <span className='text-xs font-medium'>
+            {renderQuota(userState.user.quota)}
+          </span>
+        </div>
+      )}
 
       <UserArea
         userState={userState}

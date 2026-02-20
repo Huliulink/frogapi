@@ -28,16 +28,43 @@ import {
   copy,
   getQuotaPerUnit,
 } from '../../helpers';
-import { Modal, Toast } from '@douyinfe/semi-ui';
+import {
+  Card,
+  Modal,
+  Toast,
+  Typography,
+  Tag,
+  Banner,
+  Form,
+  Spin,
+  Input,
+  Badge,
+  Button,
+} from '@douyinfe/semi-ui';
+import { IconGift } from '@douyinfe/semi-icons';
 import { useTranslation } from 'react-i18next';
 import { UserContext } from '../../context/User';
 import { StatusContext } from '../../context/Status';
+import {
+  Wallet,
+  Coins,
+  Gift,
+  Copy,
+  Zap,
+  TrendingUp,
+  BarChart2,
+  Users,
+  Sparkles,
+  Receipt,
+  ShoppingBag,
+} from 'lucide-react';
+import { getCurrencyConfig } from '../../helpers/render';
 
-import RechargeCard from './RechargeCard';
-import InvitationCard from './InvitationCard';
 import TransferModal from './modals/TransferModal';
 import PaymentConfirmModal from './modals/PaymentConfirmModal';
-import TopupHistoryModal from './modals/TopupHistoryModal';
+import PurchaseModal from './modals/PurchaseModal';
+import OrderHistory from './OrderHistory';
+import SubscriptionPlansCard from './SubscriptionPlansCard';
 
 const TopUp = () => {
   const { t } = useTranslation();
@@ -104,6 +131,12 @@ const TopUp = () => {
     amount_options: [],
     discount: {},
   });
+
+  // 购买弹窗状态
+  const [purchaseModalOpen, setPurchaseModalOpen] = useState(false);
+
+  const shouldShowSubscription =
+    !subscriptionLoading && subscriptionPlans.length > 0;
 
   const topUp = async () => {
     if (redemptionCode === '') {
@@ -664,9 +697,21 @@ const TopUp = () => {
     }));
   };
 
+  // 点击商品卡片
+  const handleProductClick = (preset) => {
+    selectPresetAmount(preset);
+    setPurchaseModalOpen(true);
+  };
+
+  // 购买弹窗确认
+  const handlePurchaseConfirm = (paymentMethod) => {
+    setPurchaseModalOpen(false);
+    preTopUp(paymentMethod);
+  };
+
   return (
-    <div className='w-full max-w-7xl mx-auto relative min-h-screen lg:min-h-0 mt-[60px] px-2'>
-      {/* 划转模态框 */}
+    <div className='mt-[60px] px-4'>
+      {/* 模态框 */}
       <TransferModal
         t={t}
         openTransfer={openTransfer}
@@ -678,8 +723,6 @@ const TopUp = () => {
         transferAmount={transferAmount}
         setTransferAmount={setTransferAmount}
       />
-
-      {/* 充值确认模态框 */}
       <PaymentConfirmModal
         t={t}
         open={open}
@@ -695,15 +738,22 @@ const TopUp = () => {
         amountNumber={amount}
         discountRate={topupInfo?.discount?.[topUpCount] || 1.0}
       />
-
-      {/* 充值账单模态框 */}
-      <TopupHistoryModal
-        visible={openHistory}
-        onCancel={handleHistoryCancel}
+      <PurchaseModal
         t={t}
+        visible={purchaseModalOpen}
+        onCancel={() => setPurchaseModalOpen(false)}
+        onConfirm={handlePurchaseConfirm}
+        payMethods={payMethods}
+        enableOnlineTopUp={enableOnlineTopUp}
+        enableStripeTopUp={enableStripeTopUp}
+        amountLoading={amountLoading}
+        renderAmount={renderAmount}
+        confirmLoading={paymentLoading}
+        topUpCount={topUpCount}
+        renderQuotaWithAmount={renderQuotaWithAmount}
+        amountNumber={amount}
+        discountRate={topupInfo?.discount?.[topUpCount] || 1.0}
       />
-
-      {/* Creem 充值确认模态框 */}
       <Modal
         title={t('确定要充值 $')}
         visible={creemOpen}
@@ -716,75 +766,370 @@ const TopUp = () => {
       >
         {selectedCreemProduct && (
           <>
-            <p>
-              {t('产品名称')}：{selectedCreemProduct.name}
-            </p>
-            <p>
-              {t('价格')}：{selectedCreemProduct.currency === 'EUR' ? '€' : '$'}
-              {selectedCreemProduct.price}
-            </p>
-            <p>
-              {t('充值额度')}：{selectedCreemProduct.quota}
-            </p>
+            <p>{t('产品名称')}：{selectedCreemProduct.name}</p>
+            <p>{t('价格')}：{selectedCreemProduct.currency === 'EUR' ? '€' : '$'}{selectedCreemProduct.price}</p>
+            <p>{t('充值额度')}：{selectedCreemProduct.quota}</p>
             <p>{t('是否确认充值？')}</p>
           </>
         )}
       </Modal>
 
-      {/* 主布局区域 */}
-      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
-        <RechargeCard
-          t={t}
-          enableOnlineTopUp={enableOnlineTopUp}
-          enableStripeTopUp={enableStripeTopUp}
-          enableCreemTopUp={enableCreemTopUp}
-          creemProducts={creemProducts}
-          creemPreTopUp={creemPreTopUp}
-          presetAmounts={presetAmounts}
-          selectedPreset={selectedPreset}
-          selectPresetAmount={selectPresetAmount}
-          formatLargeNumber={formatLargeNumber}
-          priceRatio={priceRatio}
-          topUpCount={topUpCount}
-          minTopUp={minTopUp}
-          renderQuotaWithAmount={renderQuotaWithAmount}
-          getAmount={getAmount}
-          setTopUpCount={setTopUpCount}
-          setSelectedPreset={setSelectedPreset}
-          renderAmount={renderAmount}
-          amountLoading={amountLoading}
-          payMethods={payMethods}
-          preTopUp={preTopUp}
-          paymentLoading={paymentLoading}
-          payWay={payWay}
-          redemptionCode={redemptionCode}
-          setRedemptionCode={setRedemptionCode}
-          topUp={topUp}
-          isSubmitting={isSubmitting}
-          topUpLink={topUpLink}
-          openTopUpLink={openTopUpLink}
-          userState={userState}
-          renderQuota={renderQuota}
-          statusLoading={statusLoading}
-          topupInfo={topupInfo}
-          onOpenHistory={handleOpenHistory}
-          subscriptionLoading={subscriptionLoading}
-          subscriptionPlans={subscriptionPlans}
-          billingPreference={billingPreference}
-          onChangeBillingPreference={updateBillingPreference}
-          activeSubscriptions={activeSubscriptions}
-          allSubscriptions={allSubscriptions}
-          reloadSubscriptionSelf={getSubscriptionSelf}
-        />
-        <InvitationCard
-          t={t}
-          userState={userState}
-          renderQuota={renderQuota}
-          setOpenTransfer={setOpenTransfer}
-          affLink={affLink}
-          handleAffLinkClick={handleAffLinkClick}
-        />
-      </div>
+      {/* 标题卡片 */}
+      <Card bodyStyle={{ padding: '20px 24px' }}>
+        <div className='flex items-center gap-3'>
+          <div
+            className='flex items-center justify-center w-10 h-10 rounded-lg'
+            style={{ backgroundColor: '#f59e0b15' }}
+          >
+            <Wallet size={20} style={{ color: '#f59e0b' }} />
+          </div>
+          <div>
+            <div className='text-xl font-semibold' style={{ color: 'var(--semi-color-text-0)' }}>
+              {t('钱包')}
+            </div>
+            <div className='text-sm' style={{ color: 'var(--semi-color-text-2)' }}>
+              {t('管理您的账户余额与充值')}
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      {/* 订阅套餐 */}
+      {shouldShowSubscription && (
+        <Card
+          className='mt-3'
+          title={
+            <div className='flex items-center gap-2'>
+              <Sparkles size={16} />
+              {t('订阅套餐')}
+            </div>
+          }
+        >
+          <SubscriptionPlansCard
+            t={t}
+            loading={subscriptionLoading}
+            plans={subscriptionPlans}
+            payMethods={payMethods}
+            enableOnlineTopUp={enableOnlineTopUp}
+            enableStripeTopUp={enableStripeTopUp}
+            enableCreemTopUp={enableCreemTopUp}
+            billingPreference={billingPreference}
+            onChangeBillingPreference={updateBillingPreference}
+            activeSubscriptions={activeSubscriptions}
+            allSubscriptions={allSubscriptions}
+            reloadSubscriptionSelf={getSubscriptionSelf}
+            withCard={false}
+          />
+        </Card>
+      )}
+
+      {/* 充值商品 */}
+      {statusLoading ? (
+        <Card className='mt-3'>
+          <div className='py-8 flex justify-center'>
+            <Spin size='large' />
+          </div>
+        </Card>
+      ) : (enableOnlineTopUp || enableStripeTopUp) && presetAmounts.length > 0 ? (
+        <Card
+          className='mt-3'
+          title={
+            <div className='flex items-center gap-2'>
+              <ShoppingBag size={16} />
+              {t('选择充值额度')}
+              {(() => {
+                const { symbol, rate, type } = getCurrencyConfig();
+                if (type === 'USD') return null;
+                return (
+                  <span style={{ color: 'var(--semi-color-text-2)', fontSize: '12px', fontWeight: 'normal' }}>
+                    (1 $ = {rate.toFixed(2)} {symbol})
+                  </span>
+                );
+              })()}
+            </div>
+          }
+        >
+          <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3'>
+            {presetAmounts.map((preset, index) => {
+              const discount = preset.discount || topupInfo?.discount?.[preset.value] || 1.0;
+              const originalPrice = preset.value * priceRatio;
+              const discountedPrice = originalPrice * discount;
+              const hasDiscount = discount < 1.0;
+              const actualPay = discountedPrice;
+              const save = originalPrice - discountedPrice;
+
+              const { symbol, rate, type } = getCurrencyConfig();
+              const statusStr = localStorage.getItem('status');
+              let usdRate = 7;
+              try {
+                if (statusStr) {
+                  const s = JSON.parse(statusStr);
+                  usdRate = s?.usd_exchange_rate || 7;
+                }
+              } catch (e) {}
+
+              let displayValue = preset.value;
+              let displayActualPay = actualPay;
+              let displaySave = save;
+
+              if (type === 'USD') {
+                displayActualPay = actualPay / usdRate;
+                displaySave = save / usdRate;
+              } else if (type === 'CNY') {
+                displayValue = preset.value * usdRate;
+              } else if (type === 'CUSTOM') {
+                displayValue = preset.value * rate;
+                displayActualPay = (actualPay / usdRate) * rate;
+                displaySave = (save / usdRate) * rate;
+              }
+
+              return (
+                <Card
+                  key={index}
+                  className='cursor-pointer transition-all hover:shadow-md'
+                  style={{
+                    border: selectedPreset === preset.value
+                      ? '2px solid var(--semi-color-primary)'
+                      : '1px solid var(--semi-color-border)',
+                  }}
+                  bodyStyle={{ padding: '16px' }}
+                  onClick={() => handleProductClick(preset)}
+                >
+                  <div className='text-center'>
+                    <div className='flex items-center justify-center gap-1 mb-2'>
+                      <Coins size={18} style={{ color: 'var(--semi-color-primary)' }} />
+                      <span className='text-lg font-bold' style={{ color: 'var(--semi-color-text-0)' }}>
+                        {formatLargeNumber(displayValue)} {symbol}
+                      </span>
+                    </div>
+                    {hasDiscount && (
+                      <Tag color='green' size='small' className='mb-2'>
+                        {t('折').includes('off')
+                          ? ((1 - parseFloat(discount)) * 100).toFixed(1)
+                          : (discount * 10).toFixed(1)}
+                        {t('折')}
+                      </Tag>
+                    )}
+                    <div style={{ color: 'var(--semi-color-text-2)', fontSize: '12px' }}>
+                      {t('实付')} {symbol}{displayActualPay.toFixed(2)}
+                      {hasDiscount && ` · ${t('节省')} ${symbol}${displaySave.toFixed(2)}`}
+                    </div>
+                  </div>
+                </Card>
+              );
+            })}
+          </div>
+        </Card>
+      ) : !enableCreemTopUp ? (
+        <Card className='mt-3'>
+          <Banner
+            type='info'
+            description={t('管理员未开启在线充值功能，请联系管理员开启或使用兑换码充值。')}
+            className='!rounded-xl'
+            closeIcon={null}
+          />
+        </Card>
+      ) : null}
+
+      {/* Creem 充值 */}
+      {enableCreemTopUp && creemProducts.length > 0 && (
+        <Card
+          className='mt-3'
+          title={
+            <div className='flex items-center gap-2'>
+              <Coins size={16} />
+              {t('Creem 充值')}
+            </div>
+          }
+        >
+          <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3'>
+            {creemProducts.map((product, index) => (
+              <Card
+                key={index}
+                className='cursor-pointer transition-all hover:shadow-md'
+                bodyStyle={{ padding: '16px' }}
+                style={{ border: '1px solid var(--semi-color-border)' }}
+                onClick={() => creemPreTopUp(product)}
+              >
+                <div className='text-center'>
+                  <div className='font-semibold text-base mb-1'>{product.name}</div>
+                  <div className='text-sm mb-2' style={{ color: 'var(--semi-color-text-2)' }}>
+                    {t('充值额度')}: {product.quota}
+                  </div>
+                  <div className='text-lg font-bold' style={{ color: 'var(--semi-color-primary)' }}>
+                    {product.currency === 'EUR' ? '€' : '$'}{product.price}
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </Card>
+      )}
+
+      {/* 兑换码充值 */}
+      <Card
+        className='mt-3'
+        title={
+          <div className='flex items-center gap-2'>
+            <IconGift />
+            {t('兑换码充值')}
+          </div>
+        }
+      >
+        <Form initValues={{ redemptionCode: redemptionCode }}>
+          <Form.Input
+            field='redemptionCode'
+            noLabel
+            placeholder={t('请输入兑换码')}
+            value={redemptionCode}
+            onChange={(value) => setRedemptionCode(value)}
+            prefix={<IconGift />}
+            suffix={
+              <Button
+                type='primary'
+                theme='solid'
+                onClick={topUp}
+                loading={isSubmitting}
+              >
+                {t('兑换额度')}
+              </Button>
+            }
+            showClear
+            style={{ width: '100%' }}
+            extraText={
+              topUpLink && (
+                <Typography.Text type='tertiary'>
+                  {t('在找兑换码？')}
+                  <Typography.Text
+                    type='secondary'
+                    underline
+                    className='cursor-pointer'
+                    onClick={openTopUpLink}
+                  >
+                    {t('购买兑换码')}
+                  </Typography.Text>
+                </Typography.Text>
+              )
+            }
+          />
+        </Form>
+      </Card>
+
+      {/* 我的订单 */}
+      <Card
+        className='mt-3'
+        title={
+          <div className='flex items-center gap-2'>
+            <Receipt size={16} />
+            {t('我的订单')}
+          </div>
+        }
+      >
+        <OrderHistory t={t} />
+      </Card>
+
+      {/* 邀请奖励 */}
+      <Card
+        className='mt-3 mb-4'
+        title={
+          <div className='flex items-center gap-2'>
+            <Gift size={16} />
+            {t('邀请奖励')}
+            <Typography.Text type='tertiary' size='small'>{t('邀请好友获得额外奖励')}</Typography.Text>
+          </div>
+        }
+      >
+        <div className='space-y-4'>
+          {/* 收益统计 */}
+          <div className='grid grid-cols-3 gap-3'>
+            <Card bodyStyle={{ padding: '12px' }} style={{ backgroundColor: 'var(--semi-color-fill-0)' }}>
+              <div className='text-center'>
+                <div className='text-lg font-bold' style={{ color: 'var(--semi-color-primary)' }}>
+                  {renderQuota(userState?.user?.aff_quota || 0)}
+                </div>
+                <div className='flex items-center justify-center gap-1 mt-1'>
+                  <TrendingUp size={12} style={{ color: 'var(--semi-color-text-2)' }} />
+                  <span className='text-xs' style={{ color: 'var(--semi-color-text-2)' }}>{t('待使用收益')}</span>
+                </div>
+              </div>
+            </Card>
+            <Card bodyStyle={{ padding: '12px' }} style={{ backgroundColor: 'var(--semi-color-fill-0)' }}>
+              <div className='text-center'>
+                <div className='text-lg font-bold' style={{ color: 'var(--semi-color-text-0)' }}>
+                  {renderQuota(userState?.user?.aff_history_quota || 0)}
+                </div>
+                <div className='flex items-center justify-center gap-1 mt-1'>
+                  <BarChart2 size={12} style={{ color: 'var(--semi-color-text-2)' }} />
+                  <span className='text-xs' style={{ color: 'var(--semi-color-text-2)' }}>{t('总收益')}</span>
+                </div>
+              </div>
+            </Card>
+            <Card bodyStyle={{ padding: '12px' }} style={{ backgroundColor: 'var(--semi-color-fill-0)' }}>
+              <div className='text-center'>
+                <div className='text-lg font-bold' style={{ color: 'var(--semi-color-text-0)' }}>
+                  {userState?.user?.aff_count || 0}
+                </div>
+                <div className='flex items-center justify-center gap-1 mt-1'>
+                  <Users size={12} style={{ color: 'var(--semi-color-text-2)' }} />
+                  <span className='text-xs' style={{ color: 'var(--semi-color-text-2)' }}>{t('邀请人数')}</span>
+                </div>
+              </div>
+            </Card>
+          </div>
+
+          {/* 邀请链接 */}
+          <div>
+            <div className='text-sm mb-2' style={{ color: 'var(--semi-color-text-2)' }}>
+              {t('邀请链接')}
+            </div>
+            <Input
+              value={affLink}
+              readonly
+              className='!rounded-lg'
+              suffix={
+                <Button
+                  theme='solid'
+                  size='small'
+                  icon={<Copy size={14} />}
+                  onClick={handleAffLinkClick}
+                  className='!rounded-lg'
+                >
+                  {t('复制')}
+                </Button>
+              }
+            />
+          </div>
+
+          {/* 划转按钮 */}
+          <div className='flex items-center gap-3'>
+            <Button
+              theme='solid'
+              icon={<Zap size={14} />}
+              disabled={!userState?.user?.aff_quota || userState?.user?.aff_quota <= 0}
+              onClick={() => setOpenTransfer(true)}
+              className='!rounded-lg'
+            >
+              {t('划转到余额')}
+            </Button>
+          </div>
+
+          {/* 奖励说明 */}
+          <div className='space-y-2'>
+            <div className='flex items-start gap-2'>
+              <Badge dot type='success' />
+              <Typography.Text type='tertiary' size='small'>
+                {t('邀请好友注册，好友充值后您可获得相应奖励')}
+              </Typography.Text>
+            </div>
+            <div className='flex items-start gap-2'>
+              <Badge dot type='success' />
+              <Typography.Text type='tertiary' size='small'>
+                {t('通过划转功能将奖励额度转入到您的账户余额中')}
+              </Typography.Text>
+            </div>
+          </div>
+        </div>
+      </Card>
     </div>
   );
 };
