@@ -25,11 +25,18 @@ import {
   Button,
   Input,
   Skeleton,
-  Banner,
-  Tooltip,
+  Select,
+  Divider,
 } from '@douyinfe/semi-ui';
 import { SiAlipay, SiWechat, SiStripe } from 'react-icons/si';
-import { CreditCard, ShieldCheck, Tag } from 'lucide-react';
+import {
+  CreditCard,
+  ShieldCheck,
+  AlertTriangle,
+  Clock,
+  Ban,
+  Ticket,
+} from 'lucide-react';
 
 const { Text } = Typography;
 
@@ -38,7 +45,6 @@ const PurchaseModal = ({
   visible,
   onCancel,
   onConfirm,
-  product,
   payMethods = [],
   enableOnlineTopUp,
   enableStripeTopUp,
@@ -51,6 +57,7 @@ const PurchaseModal = ({
   discountRate,
 }) => {
   const [selectedPayMethod, setSelectedPayMethod] = useState('');
+  const [promoCode, setPromoCode] = useState('');
 
   const hasDiscount =
     discountRate && discountRate > 0 && discountRate < 1 && amountNumber > 0;
@@ -61,15 +68,54 @@ const PurchaseModal = ({
     if (!selectedPayMethod) {
       return;
     }
-    onConfirm(selectedPayMethod);
+    onConfirm(selectedPayMethod, promoCode);
+  };
+
+  const handleClose = () => {
+    setSelectedPayMethod('');
+    setPromoCode('');
+    onCancel();
   };
 
   const getPayIcon = (type) => {
-    if (type === 'alipay') return <SiAlipay size={20} color='#1677FF' />;
-    if (type === 'wxpay') return <SiWechat size={20} color='#07C160' />;
-    if (type === 'stripe') return <SiStripe size={20} color='#635BFF' />;
-    return <CreditCard size={20} style={{ color: 'var(--semi-color-text-2)' }} />;
+    if (type === 'alipay') return <SiAlipay size={14} color='#1677FF' />;
+    if (type === 'wxpay') return <SiWechat size={14} color='#07C160' />;
+    if (type === 'stripe') return <SiStripe size={14} color='#635BFF' />;
+    return (
+      <CreditCard size={14} style={{ color: 'var(--semi-color-text-2)' }} />
+    );
   };
+
+  // 构建支付方式下拉选项
+  const payMethodOptions = (payMethods || [])
+    .map((method) => {
+      const minTopupVal = Number(method.min_topup) || 0;
+      const isStripe = method.type === 'stripe';
+      const disabled =
+        (!enableOnlineTopUp && !isStripe) ||
+        (!enableStripeTopUp && isStripe) ||
+        minTopupVal > Number(topUpCount || 0);
+
+      return {
+        value: method.type,
+        label: (
+          <span className='flex items-center gap-2'>
+            {getPayIcon(method.type)}
+            <span>{method.name}</span>
+            {disabled && minTopupVal > Number(topUpCount || 0) && (
+              <span
+                className='text-xs'
+                style={{ color: 'var(--semi-color-text-2)' }}
+              >
+                ({t('最低')} {minTopupVal})
+              </span>
+            )}
+          </span>
+        ),
+        disabled,
+      };
+    })
+    .filter(Boolean);
 
   return (
     <Modal
@@ -80,7 +126,7 @@ const PurchaseModal = ({
         </div>
       }
       visible={visible}
-      onCancel={onCancel}
+      onCancel={handleClose}
       footer={null}
       maskClosable={false}
       centered
@@ -104,11 +150,17 @@ const PurchaseModal = ({
                 <Skeleton.Title style={{ width: 60, height: 16 }} />
               ) : (
                 <div className='flex items-center gap-2'>
-                  <Text strong style={{ color: 'var(--semi-color-danger)' }}>
+                  <Text
+                    strong
+                    style={{ color: 'var(--semi-color-danger)' }}
+                  >
                     {renderAmount()}
                   </Text>
                   {hasDiscount && (
-                    <Text size='small' style={{ color: 'var(--semi-color-success)' }}>
+                    <Text
+                      size='small'
+                      style={{ color: 'var(--semi-color-success)' }}
+                    >
                       {Math.round(discountRate * 100)}%
                     </Text>
                   )}
@@ -135,73 +187,82 @@ const PurchaseModal = ({
         </Card>
 
         {/* 购买须知 */}
-        <Banner
-          type='info'
-          icon={<ShieldCheck size={16} />}
-          closeIcon={null}
-          description={
-            <div className='text-xs space-y-1'>
-              <div>{t('充值成功后额度将立即到账')}</div>
-              <div>{t('如遇支付问题请联系客服处理')}</div>
-            </div>
-          }
+        <Card
           className='!rounded-xl'
-        />
+          bodyStyle={{ padding: '14px 16px' }}
+          style={{ backgroundColor: 'var(--semi-color-fill-0)' }}
+        >
+          <div className='flex items-center gap-2 mb-2'>
+            <ShieldCheck size={15} style={{ color: 'var(--semi-color-warning)' }} />
+            <Text strong className='text-sm'>
+              {t('购买须知')}
+            </Text>
+          </div>
+          <div className='space-y-1.5 pl-[23px]'>
+            <div className='flex items-start gap-2 text-xs' style={{ color: 'var(--semi-color-text-2)' }}>
+              <Clock size={12} className='mt-0.5 shrink-0' />
+              <span>{t('充值成功后额度将立即到账，请确认充值金额无误')}</span>
+            </div>
+            <div className='flex items-start gap-2 text-xs' style={{ color: 'var(--semi-color-text-2)' }}>
+              <Ban size={12} className='mt-0.5 shrink-0' />
+              <span>{t('虚拟商品一经充值成功，不支持退款或转让')}</span>
+            </div>
+            <div className='flex items-start gap-2 text-xs' style={{ color: 'var(--semi-color-text-2)' }}>
+              <AlertTriangle size={12} className='mt-0.5 shrink-0' />
+              <span>{t('如遇支付异常或额度未到账，请及时联系客服处理')}</span>
+            </div>
+          </div>
+        </Card>
+
+        <Divider margin={0} />
 
         {/* 选择支付方式 */}
         <div>
-          <Text strong className='block mb-2'>
+          <Text strong className='block mb-2 text-sm'>
             {t('选择支付方式')}
           </Text>
-          {payMethods && payMethods.length > 0 ? (
-            <div className='grid grid-cols-2 gap-2'>
-              {payMethods.map((method) => {
-                const minTopupVal = Number(method.min_topup) || 0;
-                const isStripe = method.type === 'stripe';
-                const disabled =
-                  (!enableOnlineTopUp && !isStripe) ||
-                  (!enableStripeTopUp && isStripe) ||
-                  minTopupVal > Number(topUpCount || 0);
-                const isSelected = selectedPayMethod === method.type;
-
-                const card = (
-                  <Card
-                    key={method.type}
-                    className='!rounded-xl cursor-pointer transition-all'
-                    bodyStyle={{ padding: '12px' }}
-                    style={{
-                      border: isSelected
-                        ? '2px solid var(--semi-color-primary)'
-                        : '1px solid var(--semi-color-border)',
-                      opacity: disabled ? 0.5 : 1,
-                      cursor: disabled ? 'not-allowed' : 'pointer',
-                    }}
-                    onClick={() => !disabled && setSelectedPayMethod(method.type)}
-                  >
-                    <div className='flex items-center gap-2'>
-                      {getPayIcon(method.type)}
-                      <Text className='text-sm'>{method.name}</Text>
-                    </div>
-                  </Card>
+          {payMethodOptions.length > 0 ? (
+            <Select
+              placeholder={t('请选择支付方式')}
+              style={{ width: '100%' }}
+              value={selectedPayMethod || undefined}
+              onChange={(val) => setSelectedPayMethod(val)}
+              optionList={payMethodOptions}
+              renderSelectedItem={(optionNode) => {
+                const method = (payMethods || []).find(
+                  (m) => m.type === optionNode?.value,
                 );
-
-                return disabled && minTopupVal > Number(topUpCount || 0) ? (
-                  <Tooltip
-                    key={method.type}
-                    content={t('此支付方式最低充值金额为') + ' ' + minTopupVal}
-                  >
-                    {card}
-                  </Tooltip>
-                ) : (
-                  <React.Fragment key={method.type}>{card}</React.Fragment>
+                if (!method) return optionNode?.value;
+                return (
+                  <span className='flex items-center gap-2'>
+                    {getPayIcon(method.type)}
+                    <span>{method.name}</span>
+                  </span>
                 );
-              })}
-            </div>
+              }}
+            />
           ) : (
             <Text type='tertiary' className='text-sm'>
               {t('暂无可用的支付方式，请联系管理员配置')}
             </Text>
           )}
+        </div>
+
+        {/* 优惠码 */}
+        <div>
+          <Text strong className='block mb-2 text-sm'>
+            {t('优惠码')}
+            <Text type='tertiary' size='small' className='ml-1'>
+              ({t('可选')})
+            </Text>
+          </Text>
+          <Input
+            prefix={<Ticket size={14} style={{ color: 'var(--semi-color-text-2)' }} />}
+            placeholder={t('请输入优惠码')}
+            value={promoCode}
+            onChange={(val) => setPromoCode(val)}
+            showClear
+          />
         </div>
 
         {/* 确认按钮 */}

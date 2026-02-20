@@ -200,7 +200,7 @@ const ConsoleHomePage = () => {
 
         {/* 系统公告 */}
         <Card
-          className='mb-4'
+          style={{ marginBottom: 24 }}
           title={
             <div className='flex items-center gap-2'>
               <Bell size={16} />
@@ -238,6 +238,7 @@ const ConsoleHomePage = () => {
 
         {/* 邀请奖励 */}
         <Card
+          style={{ marginBottom: 24 }}
           title={
             <div className='flex items-center gap-2'>
               <Gift size={16} />
