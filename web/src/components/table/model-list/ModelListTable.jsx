@@ -38,12 +38,12 @@ const ModelListTable = ({
       dataIndex: 'model_name',
       key: 'model_name',
       render: (text, record) => (
-        <div style={{ maxWidth: isMobile ? 160 : 'none' }}>
+        <div>
           <div className='flex items-center gap-2'>
             <span className='flex-shrink-0'>
               {record.icon ? getLobeHubIcon(record.icon, 20) : getLobeHubIcon('Layers', 20)}
             </span>
-            <span className='font-medium text-sm truncate'>{text}</span>
+            <span className='font-medium text-sm'>{text}</span>
             <button
               className='flex-shrink-0 p-0.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer'
               style={{ border: 'none', background: 'none', color: 'var(--semi-color-text-2)' }}
