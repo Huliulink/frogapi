@@ -39,7 +39,7 @@ import { useTranslation } from 'react-i18next';
 import { StatusContext } from '../../../../context/Status';
 
 const fieldItemStyle = {
-  padding: '12px 20px',
+  padding: '4px 20px',
 };
 
 const EditTokenModal = (props) => {
@@ -363,7 +363,7 @@ const EditTokenModal = (props) => {
               )}
 
               <div style={fieldItemStyle}>
-                <div className='flex items-start gap-3'>
+                <div className='flex items-center gap-3'>
                   <div style={{ flex: 1 }}>
                     <Form.DatePicker
                       field='expired_time'
@@ -393,7 +393,7 @@ const EditTokenModal = (props) => {
                       style={{ width: '100%' }}
                     />
                   </div>
-                  <div style={{ paddingTop: 8 }}>
+                  <div>
                     <Form.Switch
                       field='never_expire'
                       label={t('永不过期')}
@@ -421,7 +421,7 @@ const EditTokenModal = (props) => {
               )}
 
               <div style={fieldItemStyle}>
-                <div className='flex items-start gap-3'>
+                <div className='flex items-center gap-3'>
                   <div style={{ flex: 1 }}>
                     <Form.AutoComplete
                       field='remain_quota'
@@ -445,7 +445,7 @@ const EditTokenModal = (props) => {
                       style={{ width: '100%' }}
                     />
                   </div>
-                  <div style={{ paddingTop: 8 }}>
+                  <div>
                     <Form.Switch
                       field='unlimited_quota'
                       label={t('无限额度')}
