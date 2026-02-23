@@ -294,7 +294,7 @@ const EditTokenModal = (props) => {
             theme='borderless'
             type='tertiary'
             onClick={handleCancel}
-            style={{ fontSize: 14 }}
+            style={{ fontSize: 14, color: '#1C1F23' }}
           >
             {t('取消')}
           </Button>
@@ -304,7 +304,8 @@ const EditTokenModal = (props) => {
               borderRadius: 8,
               fontSize: 14,
               padding: '6px 24px',
-              background: 'var(--semi-color-primary)',
+              background: '#ea580c',
+              borderColor: '#ea580c',
             }}
             onClick={() => formApiRef.current?.submitForm()}
             loading={loading}
