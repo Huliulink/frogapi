@@ -31,7 +31,7 @@ import {
 import { useIsMobile } from '../../../../hooks/common/useIsMobile';
 import {
   Button,
-  SideSheet,
+  Modal,
   Space,
   Spin,
   Typography,
@@ -278,8 +278,7 @@ const EditTokenModal = (props) => {
   };
 
   return (
-    <SideSheet
-      placement={isEdit ? 'right' : 'left'}
+    <Modal
       title={
         <Space>
           {isEdit ? (
@@ -296,21 +295,19 @@ const EditTokenModal = (props) => {
           </Title>
         </Space>
       }
-      bodyStyle={{ padding: '0' }}
       visible={props.visiable}
-      width={isMobile ? '100%' : 600}
+      onCancel={() => handleCancel()}
+      centered
+      width={isMobile ? '95vw' : 620}
+      bodyStyle={{
+        padding: 0,
+        maxHeight: '70vh',
+        overflowY: 'auto',
+      }}
+      style={{ borderRadius: '16px', overflow: 'hidden' }}
       footer={
-        <div className='flex justify-end bg-white'>
+        <div className='flex justify-end'>
           <Space>
-            <Button
-              theme='solid'
-              className='!rounded-lg'
-              onClick={() => formApiRef.current?.submitForm()}
-              icon={<IconSave />}
-              loading={loading}
-            >
-              {t('提交')}
-            </Button>
             <Button
               theme='light'
               className='!rounded-lg'
@@ -320,11 +317,19 @@ const EditTokenModal = (props) => {
             >
               {t('取消')}
             </Button>
+            <Button
+              theme='solid'
+              className='!rounded-lg'
+              onClick={() => formApiRef.current?.submitForm()}
+              icon={<IconSave />}
+              loading={loading}
+            >
+              {t('提交')}
+            </Button>
           </Space>
         </div>
       }
-      closeIcon={null}
-      onCancel={() => handleCancel()}
+      closable={false}
     >
       <Spin spinning={loading}>
         <Form
@@ -579,7 +584,7 @@ const EditTokenModal = (props) => {
           )}
         </Form>
       </Spin>
-    </SideSheet>
+    </Modal>
   );
 };
 
