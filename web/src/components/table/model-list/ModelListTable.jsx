@@ -12,6 +12,7 @@ const ModelListTable = ({
   currency,
   onCurrencyChange,
   exchangeRate,
+  isMobile,
 }) => {
   const { t } = useTranslation();
 
@@ -37,7 +38,7 @@ const ModelListTable = ({
       dataIndex: 'model_name',
       key: 'model_name',
       render: (text, record) => (
-        <div className='flex items-center gap-2'>
+        <div className='flex items-center gap-2' style={{ maxWidth: isMobile ? 180 : 'none' }}>
           <span className='flex-shrink-0'>
             {record.icon ? getLobeHubIcon(record.icon, 20) : getLobeHubIcon('Layers', 20)}
           </span>
@@ -56,26 +57,28 @@ const ModelListTable = ({
         </div>
       ),
     },
-    {
-      title: t('输入价格'),
-      dataIndex: inputKey,
-      key: 'input_price',
-      render: (price) => (
-        <span style={{ color: 'var(--semi-color-text-0)' }}>{formatPrice(price)}</span>
-      ),
-      align: 'right',
-      width: 140,
-    },
-    {
-      title: t('输出价格'),
-      dataIndex: outputKey,
-      key: 'output_price',
-      render: (price) => (
-        <span style={{ color: 'var(--semi-color-success)' }}>{formatPrice(price)}</span>
-      ),
-      align: 'right',
-      width: 140,
-    },
+    ...(!isMobile ? [
+      {
+        title: t('输入价格'),
+        dataIndex: inputKey,
+        key: 'input_price',
+        render: (price) => (
+          <span style={{ color: 'var(--semi-color-text-0)' }}>{formatPrice(price)}</span>
+        ),
+        align: 'right',
+        width: 140,
+      },
+      {
+        title: t('输出价格'),
+        dataIndex: outputKey,
+        key: 'output_price',
+        render: (price) => (
+          <span style={{ color: 'var(--semi-color-success)' }}>{formatPrice(price)}</span>
+        ),
+        align: 'right',
+        width: 140,
+      },
+    ] : []),
     {
       title: t('状态'),
       dataIndex: 'status',
@@ -85,7 +88,7 @@ const ModelListTable = ({
           {status === 1 ? t('可用') : t('不可用')}
         </Tag>
       ),
-      width: 80,
+      width: isMobile ? 60 : 80,
       align: 'center',
     },
   ];
@@ -114,7 +117,7 @@ const ModelListTable = ({
       </div>
 
       {/* Toggles */}
-      <div className='flex items-center justify-between px-4 py-3'>
+      <div className={`flex items-center ${isMobile ? 'flex-wrap gap-2' : 'justify-between'} px-4 py-3`}>
         <RadioGroup
           type='button'
           size='small'
@@ -137,7 +140,7 @@ const ModelListTable = ({
       </div>
 
       {/* Info banner */}
-      {endpoint.url && (
+      {endpoint.url && !isMobile && (
         <div className='px-4 pb-2'>
           <Banner
             type='info'
@@ -148,14 +151,14 @@ const ModelListTable = ({
       )}
 
       {/* Table */}
-      <div className='px-2'>
+      <div className={isMobile ? 'px-0' : 'px-2'}>
         <Table
           columns={columns}
           dataSource={models}
           rowKey='id'
           pagination={{
-            pageSize: 20,
-            showSizeChanger: true,
+            pageSize: isMobile ? 10 : 20,
+            showSizeChanger: !isMobile,
             pageSizeOpts: [10, 20, 50, 100],
           }}
           size='small'

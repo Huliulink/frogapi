@@ -41,11 +41,6 @@ import { StatusContext } from '../../../../context/Status';
 
 const fieldItemStyle = {
   padding: '12px 20px',
-  borderBottom: '1px solid var(--semi-color-border)',
-};
-
-const fieldItemLastStyle = {
-  padding: '12px 20px',
 };
 
 const EditTokenModal = (props) => {
@@ -455,39 +450,39 @@ const EditTokenModal = (props) => {
               )}
 
               <div style={fieldItemStyle}>
-                <Form.AutoComplete
-                  field='remain_quota'
-                  label={t('额度')}
-                  placeholder={t('请输入额度')}
-                  type='number'
-                  disabled={values.unlimited_quota}
-                  extraText={renderQuotaWithPrompt(values.remain_quota)}
-                  rules={
-                    values.unlimited_quota
-                      ? []
-                      : [{ required: true, message: t('请输入额度') }]
-                  }
-                  data={[
-                    { value: 500000, label: '1$' },
-                    { value: 5000000, label: '10$' },
-                    { value: 25000000, label: '50$' },
-                    { value: 50000000, label: '100$' },
-                    { value: 250000000, label: '500$' },
-                    { value: 500000000, label: '1000$' },
-                  ]}
-                  style={{ width: '100%' }}
-                />
-              </div>
-
-              <div style={fieldItemStyle}>
-                <Form.Switch
-                  field='unlimited_quota'
-                  label={t('无限额度')}
-                  size='default'
-                  extraText={t(
-                    '令牌的额度仅用于限制令牌本身的最大额度使用量，实际的使用受到账户的剩余额度限制',
-                  )}
-                />
+                <div className='flex items-end gap-3'>
+                  <div style={{ flex: 1 }}>
+                    <Form.AutoComplete
+                      field='remain_quota'
+                      label={t('额度')}
+                      placeholder={t('请输入额度')}
+                      type='number'
+                      disabled={values.unlimited_quota}
+                      extraText={renderQuotaWithPrompt(values.remain_quota)}
+                      rules={
+                        values.unlimited_quota
+                          ? []
+                          : [{ required: true, message: t('请输入额度') }]
+                      }
+                      data={[
+                        { value: 500000, label: '1$' },
+                        { value: 5000000, label: '10$' },
+                        { value: 25000000, label: '50$' },
+                        { value: 50000000, label: '100$' },
+                        { value: 250000000, label: '500$' },
+                        { value: 500000000, label: '1000$' },
+                      ]}
+                      style={{ width: '100%' }}
+                    />
+                  </div>
+                  <div style={{ paddingBottom: values.unlimited_quota ? 12 : 34 }}>
+                    <Form.Switch
+                      field='unlimited_quota'
+                      label={t('无限额度')}
+                      size='default'
+                    />
+                  </div>
+                </div>
               </div>
 
               <div style={fieldItemStyle}>
@@ -508,7 +503,7 @@ const EditTokenModal = (props) => {
                 />
               </div>
 
-              <div style={fieldItemLastStyle}>
+              <div style={fieldItemStyle}>
                 <Form.TextArea
                   field='allow_ips'
                   label={t('IP白名单（支持CIDR表达式）')}
