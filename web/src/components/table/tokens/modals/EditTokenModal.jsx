@@ -24,7 +24,7 @@ import {
   showSuccess,
   timestamp2string,
   renderGroupOption,
-  renderQuotaWithPrompt,
+  getQuotaPerUnit,
   getModelCategories,
   selectFilter,
 } from '../../../../helpers';
@@ -32,7 +32,6 @@ import { useIsMobile } from '../../../../hooks/common/useIsMobile';
 import {
   Button,
   Modal,
-  Space,
   Spin,
   Form,
 } from '@douyinfe/semi-ui';
@@ -52,11 +51,13 @@ const EditTokenModal = (props) => {
   const [models, setModels] = useState([]);
   const [groups, setGroups] = useState([]);
   const isEdit = props.editingToken.id !== undefined;
+  const quotaPerUnit = getQuotaPerUnit() || 500000;
 
   const getInitValues = () => ({
     name: '',
     remain_quota: 0,
-    expired_time: -1,
+    expired_time: '',
+    never_expire: false,
     unlimited_quota: true,
     model_limits_enabled: false,
     model_limits: [],
@@ -68,22 +69,6 @@ const EditTokenModal = (props) => {
 
   const handleCancel = () => {
     props.handleClose();
-  };
-
-  const setExpiredTime = (month, day, hour, minute) => {
-    let now = new Date();
-    let timestamp = now.getTime() / 1000;
-    let seconds = month * 30 * 24 * 60 * 60;
-    seconds += day * 24 * 60 * 60;
-    seconds += hour * 60 * 60;
-    seconds += minute * 60;
-    if (!formApiRef.current) return;
-    if (seconds !== 0) {
-      timestamp += seconds;
-      formApiRef.current.setValue('expired_time', timestamp2string(timestamp));
-    } else {
-      formApiRef.current.setValue('expired_time', -1);
-    }
   };
 
   const loadModels = async () => {
@@ -143,7 +128,11 @@ const EditTokenModal = (props) => {
     let res = await API.get(`/api/token/${props.editingToken.id}`);
     const { success, message, data } = res.data;
     if (success) {
-      if (data.expired_time !== -1) {
+      if (data.expired_time === -1) {
+        data.never_expire = true;
+        data.expired_time = '';
+      } else {
+        data.never_expire = false;
         data.expired_time = timestamp2string(data.expired_time);
       }
       if (data.model_limits !== '') {
@@ -151,6 +140,7 @@ const EditTokenModal = (props) => {
       } else {
         data.model_limits = [];
       }
+      data.remain_quota = parseFloat((data.remain_quota / quotaPerUnit).toFixed(2));
       if (formApiRef.current) {
         formApiRef.current.setValues({ ...getInitValues(), ...data });
       }
@@ -197,9 +187,11 @@ const EditTokenModal = (props) => {
   const submit = async (values) => {
     setLoading(true);
     if (isEdit) {
-      let { tokenCount: _tc, ...localInputs } = values;
-      localInputs.remain_quota = parseInt(localInputs.remain_quota);
-      if (localInputs.expired_time !== -1) {
+      let { tokenCount: _tc, never_expire, ...localInputs } = values;
+      localInputs.remain_quota = Math.round(parseFloat(localInputs.remain_quota) * quotaPerUnit);
+      if (never_expire) {
+        localInputs.expired_time = -1;
+      } else {
         let time = Date.parse(localInputs.expired_time);
         if (isNaN(time)) {
           showError(t('过期时间格式错误！'));
@@ -226,7 +218,7 @@ const EditTokenModal = (props) => {
       const count = parseInt(values.tokenCount, 10) || 1;
       let successCount = 0;
       for (let i = 0; i < count; i++) {
-        let { tokenCount: _tc, ...localInputs } = values;
+        let { tokenCount: _tc, never_expire, ...localInputs } = values;
         const baseName =
           values.name.trim() === '' ? 'default' : values.name.trim();
         if (i !== 0 || values.name.trim() === '') {
@@ -234,9 +226,11 @@ const EditTokenModal = (props) => {
         } else {
           localInputs.name = baseName;
         }
-        localInputs.remain_quota = parseInt(localInputs.remain_quota);
+        localInputs.remain_quota = Math.round(parseFloat(localInputs.remain_quota) * quotaPerUnit);
 
-        if (localInputs.expired_time !== -1) {
+        if (never_expire) {
+          localInputs.expired_time = -1;
+        } else {
           let time = Date.parse(localInputs.expired_time);
           if (isNaN(time)) {
             showError(t('过期时间格式错误！'));
@@ -317,7 +311,7 @@ const EditTokenModal = (props) => {
           initValues={getInitValues()}
           getFormApi={(api) => (formApiRef.current = api)}
           onSubmit={submit}
-          labelPosition='top'
+          labelPosition='inset'
           className='edit-token-flat-form'
         >
           {({ values }) => (
@@ -328,7 +322,6 @@ const EditTokenModal = (props) => {
                   label={t('名称')}
                   placeholder={t('请输入名称')}
                   rules={[{ required: true, message: t('请输入名称') }]}
-                  noLabel={false}
                   showClear
                   style={{ width: '100%' }}
                 />
@@ -360,6 +353,7 @@ const EditTokenModal = (props) => {
                   <Form.Switch
                     field='cross_group_retry'
                     label={t('跨分组重试')}
+                    labelPosition='left'
                     size='default'
                     extraText={t(
                       '开启后，当前分组渠道失败时会按顺序尝试下一个分组的渠道',
@@ -369,68 +363,45 @@ const EditTokenModal = (props) => {
               )}
 
               <div style={fieldItemStyle}>
-                <Form.DatePicker
-                  field='expired_time'
-                  label={t('过期时间')}
-                  type='dateTime'
-                  placeholder={t('请选择过期时间')}
-                  rules={[
-                    { required: true, message: t('请选择过期时间') },
-                    {
-                      validator: (rule, value) => {
-                        if (value === -1 || !value)
-                          return Promise.resolve();
-                        const time = Date.parse(value);
-                        if (isNaN(time)) {
-                          return Promise.reject(t('过期时间格式错误！'));
-                        }
-                        if (time <= Date.now()) {
-                          return Promise.reject(
-                            t('过期时间不能早于当前时间！'),
-                          );
-                        }
-                        return Promise.resolve();
-                      },
-                    },
-                  ]}
-                  showClear
-                  style={{ width: '100%' }}
-                />
-                <div style={{ marginTop: 8 }}>
-                  <Space wrap>
-                    <Button
-                      size='small'
-                      theme='light'
-                      type='primary'
-                      onClick={() => setExpiredTime(0, 0, 0, 0)}
-                    >
-                      {t('永不过期')}
-                    </Button>
-                    <Button
-                      size='small'
-                      theme='light'
-                      type='tertiary'
-                      onClick={() => setExpiredTime(1, 0, 0, 0)}
-                    >
-                      {t('一个月')}
-                    </Button>
-                    <Button
-                      size='small'
-                      theme='light'
-                      type='tertiary'
-                      onClick={() => setExpiredTime(0, 1, 0, 0)}
-                    >
-                      {t('一天')}
-                    </Button>
-                    <Button
-                      size='small'
-                      theme='light'
-                      type='tertiary'
-                      onClick={() => setExpiredTime(0, 0, 1, 0)}
-                    >
-                      {t('一小时')}
-                    </Button>
-                  </Space>
+                <div className='flex items-start gap-3'>
+                  <div style={{ flex: 1 }}>
+                    <Form.DatePicker
+                      field='expired_time'
+                      label={t('过期时间')}
+                      type='dateTime'
+                      placeholder={t('年/月/日—:—')}
+                      disabled={values.never_expire}
+                      rules={values.never_expire ? [] : [
+                        { required: true, message: t('请选择过期时间') },
+                        {
+                          validator: (rule, value) => {
+                            if (!value) return Promise.resolve();
+                            const time = Date.parse(value);
+                            if (isNaN(time)) {
+                              return Promise.reject(t('过期时间格式错误！'));
+                            }
+                            if (time <= Date.now()) {
+                              return Promise.reject(
+                                t('过期时间不能早于当前时间！'),
+                              );
+                            }
+                            return Promise.resolve();
+                          },
+                        },
+                      ]}
+                      showClear
+                      style={{ width: '100%' }}
+                    />
+                  </div>
+                  <div style={{ paddingTop: 8 }}>
+                    <Form.Switch
+                      field='never_expire'
+                      label={t('永不过期')}
+                      labelPosition='left'
+                      size='default'
+                      noLabel={false}
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -450,36 +421,37 @@ const EditTokenModal = (props) => {
               )}
 
               <div style={fieldItemStyle}>
-                <div className='flex items-end gap-3'>
+                <div className='flex items-start gap-3'>
                   <div style={{ flex: 1 }}>
                     <Form.AutoComplete
                       field='remain_quota'
                       label={t('额度')}
-                      placeholder={t('请输入额度')}
-                      type='number'
+                      placeholder={t('请输入金额')}
+                      prefix='$'
                       disabled={values.unlimited_quota}
-                      extraText={renderQuotaWithPrompt(values.remain_quota)}
                       rules={
                         values.unlimited_quota
                           ? []
                           : [{ required: true, message: t('请输入额度') }]
                       }
                       data={[
-                        { value: 500000, label: '1$' },
-                        { value: 5000000, label: '10$' },
-                        { value: 25000000, label: '50$' },
-                        { value: 50000000, label: '100$' },
-                        { value: 250000000, label: '500$' },
-                        { value: 500000000, label: '1000$' },
+                        { value: 1, label: '1$' },
+                        { value: 10, label: '10$' },
+                        { value: 50, label: '50$' },
+                        { value: 100, label: '100$' },
+                        { value: 500, label: '500$' },
+                        { value: 1000, label: '1000$' },
                       ]}
                       style={{ width: '100%' }}
                     />
                   </div>
-                  <div style={{ paddingBottom: values.unlimited_quota ? 12 : 34 }}>
+                  <div style={{ paddingTop: 8 }}>
                     <Form.Switch
                       field='unlimited_quota'
                       label={t('无限额度')}
+                      labelPosition='left'
                       size='default'
+                      noLabel={false}
                     />
                   </div>
                 </div>

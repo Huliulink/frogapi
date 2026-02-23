@@ -38,22 +38,30 @@ const ModelListTable = ({
       dataIndex: 'model_name',
       key: 'model_name',
       render: (text, record) => (
-        <div className='flex items-center gap-2' style={{ maxWidth: isMobile ? 180 : 'none' }}>
-          <span className='flex-shrink-0'>
-            {record.icon ? getLobeHubIcon(record.icon, 20) : getLobeHubIcon('Layers', 20)}
-          </span>
-          <span className='font-medium text-sm truncate'>{text}</span>
-          <button
-            className='flex-shrink-0 p-0.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer'
-            style={{ border: 'none', background: 'none', color: 'var(--semi-color-text-2)' }}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleCopy(text);
-            }}
-            title={t('复制模型名称')}
-          >
-            <Copy size={14} />
-          </button>
+        <div style={{ maxWidth: isMobile ? 160 : 'none' }}>
+          <div className='flex items-center gap-2'>
+            <span className='flex-shrink-0'>
+              {record.icon ? getLobeHubIcon(record.icon, 20) : getLobeHubIcon('Layers', 20)}
+            </span>
+            <span className='font-medium text-sm truncate'>{text}</span>
+            <button
+              className='flex-shrink-0 p-0.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer'
+              style={{ border: 'none', background: 'none', color: 'var(--semi-color-text-2)' }}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleCopy(text);
+              }}
+              title={t('复制模型名称')}
+            >
+              <Copy size={14} />
+            </button>
+          </div>
+          {isMobile && (
+            <div className='flex items-center gap-2 mt-1' style={{ fontSize: 12, color: 'var(--semi-color-text-2)' }}>
+              <span>{t('输入')} {formatPrice(record[inputKey])}</span>
+              <span style={{ color: 'var(--semi-color-success)' }}>{t('输出')} {formatPrice(record[outputKey])}</span>
+            </div>
+          )}
         </div>
       ),
     },
